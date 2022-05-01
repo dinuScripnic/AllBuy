@@ -1,0 +1,13 @@
+# def progress_bar():
+#     sg.theme('LightBlue2')
+#     layout = [[sg.Text('Creating your account...')],
+#             [sg.ProgressBar(1000, orientation='h', size=(20, 20), key='progbar')],
+#             [sg.Cancel()]]
+#
+#     window = sg.Window('Working...', layout)
+#     for i in range(1000):
+#         event, values = window.read(timeout=1)
+#         if event == 'Cancel' or event == sg.WIN_CLOSED:
+#             break
+#         window['progbar'].update_bar(i + 1)
+#     window.close()

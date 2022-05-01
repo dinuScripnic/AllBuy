@@ -4,14 +4,15 @@ import uuid
 
 class User:
 
-    def __init__(self, name, email, password):
-        self.id = str(uuid.uuid1())
+    def __init__(self, name, email, password, _id=str(uuid.uuid1()),
+                 join_date=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")):
+        self.id = _id
         self.name = name
         self.email = email
         self.password = password
-        self.join_date = datetime.datetime.now().strftime("%y-%m-%d %H:%M:%S")
-        self.basket = None
-        self.selling = None
+        self.join_date = join_date
+        self.basket = {}
+        self.selling = {}
 
     def assign_basket(self, basket):
         self.basket = basket
