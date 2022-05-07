@@ -14,6 +14,3 @@ class User:
         self.basket = {}
         self.selling = {}
 
-    def assign_basket(self, basket):
-        self.basket = basket
-        basket.buyer_id = self.id

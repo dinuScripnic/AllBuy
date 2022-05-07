@@ -44,20 +44,20 @@ class Ui_AllBuyCO(object):
         self.search.setFont(font)
         self.search.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.search.setObjectName("search")
-        self.categories = QtWidgets.QComboBox(self.centralwidget, )
+        self.categories = QtWidgets.QComboBox(self.centralwidget)
         self.categories.setGeometry(QtCore.QRect(30, 20, 191, 41))
         self.categories.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.categories.setObjectName("categories")
-        self.filter_widget = QtWidgets.QWidget(self.centralwidget)
-        self.filter_widget.setGeometry(QtCore.QRect(30, 90, 191, 481))
-        self.filter_widget.setStyleSheet("background-color: rgb(146,170,157);")
-        self.filter_widget.setObjectName("filter_widget")
-        self.pushButton = QtWidgets.QPushButton(self.filter_widget)
-        self.pushButton.setGeometry(QtCore.QRect(40, 440, 93, 28))
-        self.pushButton.setStyleSheet("\n"
+        self.filter_laptop_widget = QtWidgets.QWidget(self.centralwidget)
+        self.filter_laptop_widget.setGeometry(QtCore.QRect(30, 90, 191, 481))
+        self.filter_laptop_widget.setStyleSheet("background-color: rgb(146,170,157);")
+        self.filter_laptop_widget.setObjectName("filter_laptop_widget")
+        self.filter_laptop = QtWidgets.QPushButton(self.filter_laptop_widget)
+        self.filter_laptop.setGeometry(QtCore.QRect(40, 440, 93, 28))
+        self.filter_laptop.setStyleSheet("\n"
 "background-color: rgb(208, 219, 189);")
-        self.pushButton.setObjectName("pushButton")
-        self.groupBox = QtWidgets.QGroupBox(self.filter_widget)
+        self.filter_laptop.setObjectName("filter_laptop")
+        self.groupBox = QtWidgets.QGroupBox(self.filter_laptop_widget)
         self.groupBox.setGeometry(QtCore.QRect(0, 0, 191, 191))
         font = QtGui.QFont()
         font.setFamily("Times New Roman")
@@ -166,7 +166,7 @@ class Ui_AllBuyCO(object):
         self.line_2.setFrameShape(QtWidgets.QFrame.VLine)
         self.line_2.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_2.setObjectName("line_2")
-        self.groupBox_2 = QtWidgets.QGroupBox(self.filter_widget)
+        self.groupBox_2 = QtWidgets.QGroupBox(self.filter_laptop_widget)
         self.groupBox_2.setGeometry(QtCore.QRect(0, 310, 191, 121))
         font = QtGui.QFont()
         font.setFamily("Times New Roman")
@@ -213,14 +213,14 @@ class Ui_AllBuyCO(object):
         font.setPointSize(10)
         self.gd.setFont(font)
         self.gd.setObjectName("gd")
-        self.radioButton_10 = QtWidgets.QRadioButton(self.std)
-        self.radioButton_10.setGeometry(QtCore.QRect(10, 10, 85, 23))
+        self.st = QtWidgets.QRadioButton(self.std)
+        self.st.setGeometry(QtCore.QRect(10, 10, 85, 23))
         font = QtGui.QFont()
         font.setFamily("Times New Roman")
         font.setPointSize(10)
-        self.radioButton_10.setFont(font)
-        self.radioButton_10.setObjectName("radioButton_10")
-        self.groupBox_3 = QtWidgets.QGroupBox(self.filter_widget)
+        self.st.setFont(font)
+        self.st.setObjectName("st")
+        self.groupBox_3 = QtWidgets.QGroupBox(self.filter_laptop_widget)
         self.groupBox_3.setGeometry(QtCore.QRect(0, 200, 191, 101))
         font = QtGui.QFont()
         font.setFamily("Times New Roman")
@@ -353,7 +353,7 @@ class Ui_AllBuyCO(object):
         self.Add_product.setObjectName("Add_product")
         AllBuyCO.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(AllBuyCO)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1280, 21))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1280, 26))
         self.menubar.setObjectName("menubar")
         AllBuyCO.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(AllBuyCO)
@@ -365,19 +365,74 @@ class Ui_AllBuyCO(object):
 
         self.retranslateUi(AllBuyCO)
         QtCore.QMetaObject.connectSlotsByName(AllBuyCO)
-        for category in lists.categories:
+
+        # Stuff for laptop filtering
+        # group of processors that are available to check from radiobutton
+        self.user = None
+        self.radio_processor = [self.i3, self.i5, self.i7, self.i9, self.r3, self.r5, self.r7, self.r9, self.m1 ]
+        self.storage_size = [self.min, self.tb2, self.tb, self.max]
+        self.screen_size = [self.sml, self.mdm, self.lg]
+        self.screen_quality = [self.st, self.gd, self.pr]
+        self.acctual_widget = 'Laptop'
+        for category in lists.categories:  # add values for category in combobox
             self.categories.addItem(category)
-        for ram in lists.laptop_ram:
+        for ram in lists.laptop_ram:  # add values for ram in combobox
             self.ram.addItem(str(ram))
-        self.account.clicked.connect(lw.log_in_window)
+        self.ram.setCurrentIndex(self.ram.findText("8", QtCore.Qt.MatchFixedString))  # set default value for ram
+        # add if user is active, go to account info
+        self.account.clicked.connect(lw.log_in_window)  # connect button my_account to function
+        self.filter_laptop.clicked.connect(self.get_filters)  # when press button get filters as dictionary
+        self.basket.clicked.connect(self.change_widget)
         self.Add_product.clicked.connect(ap.add_product_window)
+        self.categories.activated.connect(self.get_category)
+
+    def get_category(self):
+        """
+
+        :return: change the filter widget according to category
+                 and displays products
+        """
+        print(self.categories.currentText())
+        if self.categories.currentText() == 'Laptop':
+            self.filter_tablet_widget.hide()
+            self.filter_smartphone_widget.hide()
+            self.filter_laptop_widget.show()
+        if self.categories.currentText() == 'Tablet':
+            self.filter_smartphone_widget.hide()
+            self.filter_laptop_widget.hide()
+            self.filter_tablet_widget.show()
+        if self.categories.currentText() == 'Smartphone':
+            self.filter_tablet_widget.hide()
+            self.filter_laptop_widget.hide()
+            self.filter_smartphone_widget.show()
+
+    def get_filters(self):
+        """
+
+        :return: dictionary with user choices
+        """
+        user_choices = {}
+        for processor in self.radio_processor:
+            if processor.isChecked():
+                user_choices['processor'] = processor.text()
+        for storage in self.storage_size:
+            if storage.isChecked():
+                user_choices['storage_size'] = storage.text()
+        user_choices['ram'] = self.ram.currentText()
+        for size in self.screen_size:
+            if size.isChecked():
+                user_choices['screen_size'] = size.text()
+        for quality in self.screen_quality:
+            if quality.isChecked():
+                user_choices['screen_quality'] = quality.text()
+        print(user_choices)
 
     def retranslateUi(self, AllBuyCO):
         _translate = QtCore.QCoreApplication.translate
         AllBuyCO.setWindowTitle(_translate("AllBuyCO", "MainWindow"))
         self.account.setText(_translate("AllBuyCO", "My Account"))
         self.label.setText(_translate("AllBuyCO", "Search"))
-        self.pushButton.setText(_translate("AllBuyCO", "Filter"))
+        self.filter_laptop.setText(_translate("AllBuyCO", "Filter"))
         self.groupBox.setTitle(_translate("AllBuyCO", "Power"))
         self.i3.setText(_translate("AllBuyCO", "Intel i3"))
         self.i5.setText(_translate("AllBuyCO", "Intel i5"))
@@ -395,9 +450,9 @@ class Ui_AllBuyCO(object):
         self.lg.setText(_translate("AllBuyCO", "17.3`"))
         self.sml.setText(_translate("AllBuyCO", "<14`"))
         self.mdm.setText(_translate("AllBuyCO", "14`-16`"))
+        self.st.setText(_translate("AllBuyCO", "Standard"))
         self.pr.setText(_translate("AllBuyCO", "Premium"))
         self.gd.setText(_translate("AllBuyCO", "Good"))
-        self.radioButton_10.setText(_translate("AllBuyCO", "Standard"))
         self.groupBox_3.setTitle(_translate("AllBuyCO", "Storage"))
         self.ssd.setText(_translate("AllBuyCO", "SSD"))
         self.hdd.setText(_translate("AllBuyCO", "HDD"))

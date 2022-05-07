@@ -6,3 +6,7 @@ class Basket:
 
     def add_product(self, product):
         self.products.append(product)
+
+
+# def show_basket():
+#

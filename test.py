@@ -1,6 +1,7 @@
-# import log_in_window as lp
-#
-#
+import log_in_window as lp
+import add_product
+
+
 # lp.log_in_window()
-x = '12.3'
-print(x < 15.6 and x > 10)
+
+add_product.add_product_window()

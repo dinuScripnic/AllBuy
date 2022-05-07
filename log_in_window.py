@@ -4,28 +4,33 @@ import register_window as rw
 
 
 def log_in_window():
-    sg.theme('DarkAmber')
+    sg.theme("NeutralBlue")
     layout = [
-              [sg.Text('Hello')],
-              [sg.Text('Email'), sg.InputText(key='-email-')],
-              [sg.Text('Password'), sg.InputText(key='-password-')],
-              [sg.Button('Log in'), sg.Button('Register')]
-              ]
-    window = sg.Window('Log in', layout)
+        [sg.Text("Welcome Back!", font=("Bookman Old Style", 14))],
+        [
+            sg.Text("Email", size=(10, 1), font=("Bookman Old Style", 11)),
+            sg.InputText(key="-email-", size=(25, 1)),
+        ],
+        [
+            sg.Text("Password", size=(10, 1), font=("Bookman Old Style", 11)),
+            sg.InputText(key="-password-", size=(25, 1)),
+        ],
+        [
+            sg.Button("Log in", font=("Bookman Old Style", 10), size=(10, 1)),
+            sg.Button("Register", font=("Bookman Old Style", 10), size=(10, 1)),
+        ],
+    ]
+    window = sg.Window("Log in", layout, element_justification="c", size=(350, 150))
     while True:
         event, values = window.read()
         if event == sg.WIN_CLOSED:
             break
-        elif event == 'Log in':
-            password = values['-password-']
-            email = values['-email-']
-            out = df.get_user(email, password)
+        elif event == "Log in":
+            out = df.get_user(values["-email-"], values["-password-"])
             if out:
                 print(out)
-                print(out.join_date)
                 window.close()
                 return out
-        elif event == 'Register':
+        elif event == "Register":
             window.close()
             rw.register_window()
-

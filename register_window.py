@@ -3,50 +3,66 @@ import user_registration as ur
 
 
 def register_window():
-    sg.theme('DarkAmber')
+    sg.theme("NeutralBlue")
     layout = [
-              [sg.Text('Hello')],
-              [sg.Text('Name'), sg.InputText(key='-name-')],
-              [sg.Text('Email'), sg.InputText(key='-email-')],
-              [sg.Text('Password'), sg.InputText(key='-password-')],
-              [sg.Text('Confirm Password'), sg.InputText(key='-repeat_password-')],
-              [sg.Button('Register')]
-              ]
-    window = sg.Window('Sign Up', layout)
+        [sg.Text("Welcome to AllBuy!", font=("Bookman Old Style", 13))],
+        [sg.Text("We wish you successful shopping!", font=("Bookman Old Style", 13))],
+        [
+            sg.Text("Name", size=(15, 1), font=("Bookman Old Style", 11)),
+            sg.InputText(key="-name-"),
+        ],
+        [
+            sg.Text("Email", size=(15, 1), font=("Bookman Old Style", 11)),
+            sg.InputText(key="-email-"),
+        ],
+        [
+            sg.Text("Password", size=(15, 1), font=("Bookman Old Style", 11)),
+            sg.InputText(key="-password-"),
+        ],
+        [
+            sg.Text("Confirm Password", size=(15, 1), font=("Bookman Old Style", 11)),
+            sg.InputText(key="-repeat_password-"),
+        ],
+        [sg.Button("Register", font=("Bookman Old Style", 10), size=(10, 1))],
+    ]
+    window = sg.Window("Sign Up", layout, element_justification="c", size=(450, 220))
     while True:
         event, values = window.read()
         if event == sg.WIN_CLOSED:
             break
-        elif event == 'Register':
-            name = values['-name-']
-            email = values['-email-']
-            password = values['-password-']
-            repeat_password = values['-repeat_password-']
-            out = ur.create_user(name, email, password, repeat_password)
+        elif event == "Register":
+            out = ur.create_user(
+                values["-name-"],
+                values["-email-"],
+                values["-password-"],
+                values["-repeat_password-"],
+            )
             if out:
                 window.close()
                 return out
 
 
 def email_confirmation_window(generated_code):
-    sg.theme('DarkAmber')
+    sg.theme("NeutralBlue")
     layout = [
-              [sg.Text('Confirmation code')],
-              [sg.InputText(key='-code-')],
-              [sg.Button('Confirm'), sg.Button('Return')]
-              ]
-    window = sg.Window('Confirmation', layout)
+        [sg.Text("Confirmation code", font=("Bookman Old Style", 12))],
+        [sg.InputText(key="-code-", size=(30, 1))],
+        [
+            sg.Button("Confirm", font=("Bookman Old Style", 10), size=(7, 1)),
+            sg.Button("Return", font=("Bookman Old Style", 10), size=(7, 1)),
+        ],
+    ]
+    window = sg.Window("Confirmation", layout, element_justification="c")
     while True:
         event, values = window.read()
         if event == sg.WIN_CLOSED:
             break
-        elif event == 'Confirm':
-            code = values['-code-']
-            if code == generated_code:
+        elif event == "Confirm":
+            if values["-code-"] == generated_code:
                 window.close()
                 return True
             else:
                 return False
-        elif event == 'Return':
+        elif event == "Return":
             window.close()
             register_window()

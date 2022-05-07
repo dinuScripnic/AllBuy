@@ -1,54 +1,62 @@
-import psycopg2
 from user import User
+import sqlite3
+import os.path
+
 import PySimpleGUI as sg
-# User_data(id(int)(PK),name(str),email(str),password(str),join_date(time))
-# make popups nice
 
 
-def add_user(user):  # needed for registration
-    """
-    :param user: object of class User
-    :return: same User, but in process used is added in database
-
-    """
-    _id = f'\'{user.id}\''
-    name = f'\'{user.name}\''
-    email = f'\'{user.email}\''
-    password = f'\'{user.password}\''
-    join_date = f'\'{user.join_date}\''
-    # gets all re required data and transforms it into proper sql format
-    try:
-        connection = psycopg2.connect(user='postgres', password='Dinu2003', host='localhost', port='5432',
-                                      database='AllBuy')
+def check_db():  # creates the dummy database if it doesn't exist
+    if not os.path.exists('AllBuy.db'):
+        connection = sqlite3.connect('AllBuy.db')
         cursor = connection.cursor()
-        # connects with local database
-        add_user = f'''INSERT INTO user_data (id, name, email, password, join_date)
-                       VALUES ({_id}, {name}, {email}, {password}, {join_date});'''
-        # inserts into existing database
+        create_workspace = ''' CREATE TABLE costumers(
+                              costumer_id VARCHAR(40) PRIMARY KEY,
+                              costumer_name VARCHAR(255) NOT NULL,
+                              costumer_email VARCHAR(255) UNIQUE NOT NULL ,
+                              costumer_password VARCHAR(16) NOT NULL,
+                              join_date TIMESTAMP
+                              );
+        '''
+        cursor.execute(create_workspace)
+        connection.commit()
+        connection.close()
+
+
+def add_costumer(user):
+    """
+        :param user: object of class User
+        :return: same User, but in process used is added in database
+    """
+    try:  # works only if email is unique
+        connection = sqlite3.connect('AllBuy.db')
+        print('acces')
+        cursor = connection.cursor()
+        add_user = f''' INSERT INTO costumers(costumer_id, costumer_name, costumer_email, costumer_password, join_date) 
+                      VALUES ('{user.id}', '{user.name}', '{user.email}', '{user.password}', '{user.join_date}');'''
         cursor.execute(add_user)
         connection.commit()
-    except (Exception, psycopg2.Error) as error:
-        # handles errors
-        print(error)
+        print('commited')
+        return user
+    except sqlite3.IntegrityError:
+        sg.popup_error('Email already in use!', title='ERROR', font=('Bahnschrift', 16), line_width=150)
     finally:
         if connection:
             cursor.close()
-            connection.close()  # closes connection with database no mater what happened
+            connection.close()  # closes connection with database
 
 
 def get_user(email, password):  # get user out of a database, needed for logging in
     """
 
-    :param email: user email
-    :param password: user password
-    :return: user class object
+        :param email: user email
+        :param password: user password
+        :return: user class object
 
     """
     try:
-        connection = psycopg2.connect(user='postgres', password='Dinu2003', host='localhost', port='5432',
-                                      database='AllBuy')
+        connection = sqlite3.connect('AllBuy.db')
         cursor = connection.cursor()
-        cursor.execute(f'SELECT * from user_data WHERE email = \'{email}\'')
+        cursor.execute(f'SELECT * from costumers WHERE costumer_email = \'{email}\'')
         user_data = cursor.fetchall()  # searches for user
         if user_data:
             user_data = user_data[0]
@@ -58,43 +66,29 @@ def get_user(email, password):  # get user out of a database, needed for logging
                 sg.popup('Logged in')
                 return user
             else:
-                sg.popup_error('Wrong password')
+                sg.popup_error('Wrong Password!', title='ERROR', font=('Bahnschrift', 16), line_width=150)
         else:
-            sg.popup_error('User not found')
-    except (Exception, psycopg2.Error) as error:
-        print(error)
+            sg.popup_error('User not found', title='ERROR', font=('Bahnschrift', 16), line_width=150)
     finally:
         if connection:
             cursor.close()
             connection.close()
 
 
+def get_product(searched_name):
+    """
 
+        :param searched_name: input from search
+        :return: displays items related to
 
+    """
+    try:
+        connection = sqlite3.connect('AllBuy.db')
+        cursor = connection.cursor()
+        cursor.execute(f'SELECT * from products WHERE name LIKE \'%{searched_name}%\'')
+        user_data = cursor.fetchall()  # searches for user
 
-
-
-
-# def add_item(item):
-#     try:
-#         connection = psycopg2.connect(user='postgres', password='Dinu2003', host='localhost', port='5432',
-#                                       database='AllBuy')
-#         cursor = connection.cursor()
-#         create_user = '''CREATE TABLE user_data
-#         (id VARCHAR(255) PRIMARY KEY,
-#         name VARCHAR(255),
-#         email VARCHAR(255) NOT NULL,
-#         password VARCHAR(255) NOT NULL,
-#         join_date TIMESTAMP NOT NULL);
-#         '''
-#         cursor.execute(create_user)
-#         connection.commit()
-#         print('Table added')
-#         cursor.execute("SELECT * from user_data")
-#         print("Result ", cursor.fetchall())
-#     except (Exception, psycopg2.Error) as error:
-#         print(error)
-#     finally:
-#         if connection:
-#             cursor.close()
-#             connection.close()
+    finally:
+        if connection:
+            cursor.close()
+            connection.close()
