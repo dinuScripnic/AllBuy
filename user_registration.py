@@ -8,6 +8,11 @@ import PySimpleGUI as sg
 
 
 def check_email(email):
+
+    """
+        :param email: email that has to be checked if is valid format
+        :return: true/ false if email is valid
+    """
     if re.fullmatch(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', email):
         return True
     else:
@@ -15,6 +20,13 @@ def check_email(email):
 
 
 def email_verification(name, email, code):
+    """
+
+    :param name: user_name
+    :param email: user_email
+    :param code: randomly generated to verify email
+    :return: sends email to mentioned email address with the code in order to verify if this email belongs to our user
+    """
     with smtplib.SMTP('smtp.gmail.com', 587) as server:
         server.starttls()
         try:
@@ -31,16 +43,28 @@ def email_verification(name, email, code):
 
 
 def create_user(name, email, password, repeat_password):
-    if len(name) != 0:
-        if check_email(email):
-            if len(password) in range(8, 17):
-                if password == repeat_password:
+    """
+    :param name: user name
+    :param email: user
+    :param password:
+    :param repeat_password:
+    :return: handles all the operations to get user_data, check it, validate it and send to database
+    """
+    if len(name) != 0:  # check if name is long enough
+        if check_email(email):  # check email validity using regex
+            if len(password) in range(8, 17):  # check if password is long enough
+                if password == repeat_password:  # check if passwords match
+                    # generates the verification code
                     random_code = ''.join([str(random.randint(0, 9)) for i in range(6)])
+                    # verifies email
                     email_verification(name, email, random_code)
                     # add new import
                     if rw.email_confirmation_window(random_code):
+                        # creates a object of class user
                         user = User(name, email, password)
+                        # adds to database
                         df.add_costumer(user)
+                        # returns user for later usage
                         return user
                     else:
                         sg.popup_error('Wrong code!', title='ERROR', font=('Bahnschrift', 16), line_width=150)

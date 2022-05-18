@@ -9,7 +9,6 @@ from requests import *
 def usd(amount):
     usd = amount
     rate = get('https://v6.exchangerate-api.com/v6/5fc93466e50928ba17789754/latest/USD').json()['conversion_rates']
-    print(rate)
     eur = amount * rate['EUR']
     gbp = amount * rate['GBP']
     chf = amount * rate['CHF']
@@ -20,7 +19,6 @@ def usd(amount):
 def eur(amount):
     eur = amount
     rate = get('https://v6.exchangerate-api.com/v6/5fc93466e50928ba17789754/latest/EUR').json()['conversion_rates']
-    print(rate)
     usd = amount * rate['USD']
     gbp = amount * rate['GBP']
     chf = amount * rate['CHF']
@@ -31,7 +29,6 @@ def eur(amount):
 def gbp(amount):
     gbp = amount
     rate = get('https://v6.exchangerate-api.com/v6/5fc93466e50928ba17789754/latest/GBP').json()['conversion_rates']
-    print(rate)
     usd = amount * rate['USD']
     eur = amount * rate['EUR']
     chf = amount * rate['CHF']
@@ -42,7 +39,6 @@ def gbp(amount):
 def chf(amount):
     chf = amount
     rate = get('https://v6.exchangerate-api.com/v6/5fc93466e50928ba17789754/latest/CHF').json()['conversion_rates']
-    print(rate)
     usd = amount * rate['USD']
     eur = amount * rate['EUR']
     gbp = amount * rate['GBP']
@@ -53,7 +49,6 @@ def chf(amount):
 def jpy(amount):
     jpy = amount
     rate = get('https://v6.exchangerate-api.com/v6/5fc93466e50928ba17789754/latest/JPY').json()['conversion_rates']
-    print(rate)
     usd = amount * rate['USD']
     eur = amount * rate['EUR']
     gbp = amount * rate['GBP']
