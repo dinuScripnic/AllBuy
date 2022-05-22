@@ -12,6 +12,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import lists
 import log_in_window as lw
 import add_product as ap
+import database_func as df
 
 
 # I did this all using pyqt5 designer, I have no idea what is going on there
@@ -32,7 +33,7 @@ class Ui_AllBuyCO(object):
         self.account.setFont(font)
         self.account.setStyleSheet("background-color: rgb(208, 219, 189);")
         self.account.setObjectName("account")
-        self.label = QtWidgets.QLabel(self.centralwidget)
+        self.label = QtWidgets.QPushButton(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(250, 20, 68, 41))
         font = QtGui.QFont()
         font.setFamily("Times New Roman")
@@ -711,6 +712,8 @@ class Ui_AllBuyCO(object):
                                self.gd_tab, self.pr_tab]
         self.storage_type = [self.ssd, self.hdd]
         self.graphics = [self.df, self.dt]
+        self.user = None
+        self.products = df.get_all_products()
         for category in lists.categories:  # add values for category in combobox
             self.categories.addItem(category)
         for ram in lists.laptop_ram:  # add values for ram in combobox
@@ -723,13 +726,34 @@ class Ui_AllBuyCO(object):
         for brand in lists.tablet_brands:
             self.tab_brand.addItem(brand)
         self.ram.setCurrentIndex(self.ram.findText("8", QtCore.Qt.MatchFixedString))  # set default value for ram
-        # add if user is active, go to account info
-        self.account.clicked.connect(lw.log_in_window)  # connect button my_account to function
+        self.account.clicked.connect(self.user_functions)  # connect button my_account to function
         self.filter_laptop.clicked.connect(self.get_filters)
         self.filter_tablet.clicked.connect(self.get_filters)
         self.filter_phone_2.clicked.connect(self.get_filters)  # when press button get filters as dictionary
         self.Add_product.clicked.connect(ap.add_product_window)
         self.categories.activated.connect(self.get_category)
+        self.basket.clicked.connect(self.basket_function)
+        self.label.clicked.connect(self.search_product)
+
+    def search_product(self):
+
+        self.products = df.search_product(self.search.text())
+        print(self.products)
+        # create widget to show
+
+    def user_functions(self):
+        if not self.user:
+            self.user = lw.log_in_window()
+        else:
+            lw.account(self.user)
+            # create user window
+
+    def basket_function(self):
+        if self.user:
+            basket = df.basket(self.user.id)
+            # crete basket window
+        else:
+            print('No User')
 
     def get_category(self):  # using the designer i created 3 filter widgets, this function change widget
         # according to category, also it displays products related to this category
@@ -758,6 +782,9 @@ class Ui_AllBuyCO(object):
         for processor in self.radio_processor:
             if processor.isChecked():
                 user_choices['processor'] = processor.text()
+                processor.setAutoExclusive(False)
+                processor.setChecked(False)
+                processor.setAutoExclusive(True)
         if self.categories.currentText() == 'Laptop':
             user_choices['ram'] = self.ram.currentText()
             for type in self.storage_type:
@@ -765,11 +792,17 @@ class Ui_AllBuyCO(object):
                     user_choices['storage_type'] = 1
                 if type.isChecked() and type.text() == 'HDD':
                     user_choices['storage_type'] = 0
+                type.setAutoExclusive(False)
+                type.setChecked(False)
+                type.setAutoExclusive(True)
             for graphics in self.graphics:
                 if graphics.isChecked() and graphics.text() == 'Discrete':
                     user_choices['graphics'] = 1
                 if graphics.isChecked() and graphics.text() == 'Integrated':
                     user_choices['graphics'] = 0
+                graphics.setAutoExclusive(False)
+                graphics.setChecked(False)
+                graphics.setAutoExclusive(True)
         if self.categories.currentText() == 'Tablet':
             user_choices['ram'] = self.ram_tablet.currentText()
             user_choices['brand'] = self.tab_brand.currentText()
@@ -779,13 +812,31 @@ class Ui_AllBuyCO(object):
         for storage in self.storage_size:
             if storage.isChecked():
                 user_choices['storage_size'] = storage.text()
+                storage.setAutoExclusive(False)
+                storage.setChecked(False)
+                storage.setAutoExclusive(True)
         for size in self.screen_size:
             if size.isChecked():
                 user_choices['screen_size'] = size.text()
+                size.setAutoExclusive(False)
+                size.setChecked(False)
+                size.setAutoExclusive(True)
         for quality in self.screen_quality:
             if quality.isChecked():
                 user_choices['screen_quality'] = quality.text()
+                quality.setAutoExclusive(False)
+                quality.setChecked(False)
+                quality.setAutoExclusive(True)
         print(user_choices)
+        if self.categories.currentText() == 'Laptop':
+            self.products = df.filter_laptop(user_choices)
+        if self.categories.currentText() == 'Tablet':
+            self.products = df.filter_tablet(user_choices)
+        if self.categories.currentText() == 'Smartphone':
+            self.products = df.filter_smartphone(user_choices)
+        print(self.products)
+        # widget
+
 
     def retranslateUi(self, AllBuyCO):
         _translate = QtCore.QCoreApplication.translate

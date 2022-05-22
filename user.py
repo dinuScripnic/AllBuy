@@ -11,6 +11,6 @@ class User:
         self.email = email
         self.password = password
         self.join_date = join_date
-        self.basket = {}
-        self.selling = {}
 
+    def __repr__(self):
+        return f'{self.id}, {self.name}, {self.email}'

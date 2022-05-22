@@ -28,9 +28,32 @@ def log_in_window():
         elif event == "Log in":
             out = df.get_user(values["-email-"], values["-password-"])
             if out:
-                print(out)
                 window.close()
                 return out
         elif event == "Register":
             window.close()
-            rw.register_window()
+            out = rw.register_window()
+            return out
+
+
+def account(user):
+    sg.theme("NeutralBlue")
+    layout = [
+        [sg.Text("Welcome Back!", font=("Bookman Old Style", 14))],
+
+        [sg.Image(filename='user.jpg')]
+    ]
+    window = sg.Window("Log in", layout, element_justification="c", size=(350, 150))
+    while True:
+        event, values = window.read()
+        if event == sg.WIN_CLOSED:
+            break
+        elif event == "Log in":
+            out = df.get_user(values["-email-"], values["-password-"])
+            if out:
+                window.close()
+                return out
+        elif event == "Register":
+            window.close()
+            out = rw.register_window()
+            return out
