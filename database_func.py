@@ -445,7 +445,6 @@ def basket(user_id):
         cursor = connection.cursor()
         cursor.execute(f'SELECT category, product FROM basket WHERE user = \'{user_id}\';')
         basket = cursor.fetchall()
-        print(basket)
         out = []
         for data in basket:
             if data[0] == 1:

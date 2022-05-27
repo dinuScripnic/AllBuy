@@ -9,6 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import Qt, QSize
 import lists
 import log_in_window as lw
 import add_product as ap
@@ -265,7 +266,7 @@ class Ui_AllBuyCO(object):
         self.filter_tablet = QtWidgets.QPushButton(self.filter_tablet_widget)
         self.filter_tablet.setGeometry(QtCore.QRect(50, 440, 93, 28))
         self.filter_tablet.setStyleSheet("\n"
-                                        "background-color: rgb(208, 219, 189);")
+                                         "background-color: rgb(208, 219, 189);")
         self.filter_tablet.setObjectName("filter_tablet")
         self.tab_brand = QtWidgets.QComboBox(self.filter_tablet_widget)
         self.tab_brand.setGeometry(QtCore.QRect(60, 20, 121, 22))
@@ -701,7 +702,7 @@ class Ui_AllBuyCO(object):
         QtCore.QMetaObject.connectSlotsByName(AllBuyCO)
         # Stuff for laptop filtering
         # group of processors that are available to check from radiobutton
-        self.filter_laptop_widget.hide()
+        self.filter_laptop_widget.show()
         self.filter_tablet_widget.hide()
         self.filter_phone_widget.hide()
         self.radio_processor = [self.i3, self.i5, self.i7, self.i9, self.r3, self.r5, self.r7, self.r9, self.m1,
@@ -715,15 +716,19 @@ class Ui_AllBuyCO(object):
                                self.gd_tab, self.pr_tab]
         self.storage_type = [self.ssd, self.hdd]
         self.graphics = [self.df, self.dt]
+        # set no user for beginning
         self.user = None
+        # get all the products
         self.products = df.get_all_products()
         for category in lists.categories:  # add values for category in combobox
             self.categories.addItem(category)
-        for ram in lists.laptop_ram:  # add values for ram in combobox
+        # add values for ram in combobox
+        for ram in lists.laptop_ram:
             self.ram.addItem(str(ram))
         for ram in lists.smartphone_ram:
             self.ram_tablet.addItem(str(ram))
             self.ram_smartphone.addItem((str(ram)))
+        # add values for brand in comboboxes
         for brand in lists.smartphone_brands:
             self.phone_brand.addItem(brand)
         for brand in lists.tablet_brands:
@@ -737,16 +742,58 @@ class Ui_AllBuyCO(object):
         self.categories.activated.connect(self.get_category)
         self.basket.clicked.connect(self.basket_function)
         self.label.clicked.connect(self.search_product)
+        # create area for displaying products
+        self.display_products(self.products)
+        # self.products_area = QtWidgets.QGroupBox()
+        # self.button_list = []
+        # self.goupboxes = []
+        # self.scroll = QtWidgets.QScrollArea(self.centralwidget)
+        # self.scroll.setGeometry(QtCore.QRect(290, 100, 961, 500))
+        # self.scroll.setObjectName("scroll")
+        #
+        # height = 10
+        # for i in range(len(self.products)):
+        #     self.product_groupbox = QtWidgets.QGroupBox(self.scroll)
+        #     self.product_groupbox.setGeometry(QtCore.QRect(10, height, 940, 50))
+        #     self.goupboxes.append(self.product_groupbox)
+        #     self.product = QtWidgets.QLabel(self.product_groupbox)
+        #     self.product.setGeometry(QtCore.QRect(20, 9, 770, 30))
+        #     self.product.setText(f'Name: {self.products[i].name}, Brand: {self.products[i].brand}, Processor: {self.products[i].processor}, Price: {self.products[i].price}{self.products[i].currency}')
+        #     self.button_list.append(QtWidgets.QPushButton(self.product_groupbox))
+        #     self.button_list[i].setText('View More')
+        #     self.button_list[i].setGeometry(QtCore.QRect(830, 10, 101, 31))
+        #     self.button_list[i].setStyleSheet("background-color: rgb(208, 219, 189);")
+        #     height += 60
 
+    def display_products(self, products):
+        self.button_list = []
+        self.scroll = QtWidgets.QScrollArea(self.centralwidget)
+        self.scroll.setGeometry(QtCore.QRect(290, 100, 961, 500))
+        height = 10
+        for i in range(len(self.products)):
+            self.product_groupbox = QtWidgets.QGroupBox(self.scroll)
+            self.product_groupbox.setGeometry(QtCore.QRect(10, height, 940, 50))
+            self.product = QtWidgets.QLabel(self.product_groupbox)
+            self.product.setGeometry(QtCore.QRect(20, 9, 770, 30))
+            self.product.setText(
+                f'Name: {products[i].name}, Brand: {products[i].brand}, Processor: {products[i].processor}, Price: {products[i].price}{products[i].currency}')
+            self.button_list.append(QtWidgets.QPushButton(self.product_groupbox))
+            self.button_list[i].setText('View More')
+            self.button_list[i].setGeometry(QtCore.QRect(830, 10, 101, 31))
+            self.button_list[i].setStyleSheet("background-color: rgb(208, 219, 189);")
+            height += 60
+        print(self.button_list)
 
     def search_product(self):
+        found_products = df.search_product(self.search.text())
+        if found_products:
+            try:
+                self.display_products(found_products)
+            except Exception:
+                print(Exception)
 
-        self.products = df.search_product(self.search.text())
-        if self.products:
-            print(self.products)
         else:
             sg.popup_error('No Products Found', title='ERROR', font=('Bahnschrift', 16), line_width=150)
-        # create widget to show
 
     def user_functions(self):
         if not self.user:
@@ -760,9 +807,18 @@ class Ui_AllBuyCO(object):
     def basket_function(self):
         if self.user:
             basket = df.basket(self.user.id)
-            # crete basket window
+            self.basket = QtWidgets.QMainWindow()
+            self.scroll = QtWidgets.QScrollArea()
+            basket_dictionary = {}
+            for item in range(len(basket)):
+                basket_dictionary[item] = basket[item]
+            print(basket_dictionary)
         else:
             sg.popup_error('No User Found', title='ERROR', font=('Bahnschrift', 16), line_width=150)
+
+    def hook_item(self, widget, items):
+
+        pass
 
     def get_category(self):  # using the designer i created 3 filter widgets, this function change widget
         # according to category, also it displays products related to this category

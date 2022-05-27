@@ -1,2 +1,0 @@
-import log_in_window
-log_in_window.log_in_window()

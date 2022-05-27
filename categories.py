@@ -23,10 +23,10 @@ class Laptop:
         self.price = price
         self.currency = currency
         self.add_time = add_time
-
-    def __repr__(self):
-        out = f'''{self.category}, {self._id}, {self.name}, {self.brand}, {self.model}, {self.processor}, {self.ram}, {self.display_size}, {self.display_quality}, {self.ssd}, {self.storage},{self.graphics}, {self.vram}, {self.description}, {self.price}, {self.currency}, {self.add_time}'''
-        return out
+    #
+    # def __repr__(self):
+    #     out = f'''{self.category}, {self._id}, {self.name}, {self.brand}, {self.model}, {self.processor}, {self.ram}, {self.display_size}, {self.display_quality}, {self.ssd}, {self.storage},{self.graphics}, {self.vram}, {self.description}, {self.price}, {self.currency}, {self.add_time}'''
+    #     return out
 
 
 class Tablet:
@@ -50,11 +50,11 @@ class Tablet:
         self.currency = currency
         self.add_time = add_time
 
-    def __repr__(self):
-        out = f'''{self.category}, {self._id}, {self.name}, {self.brand}, {self.model}, {self.processor}, {self.ram},
-                     {self.display_size}, {self.display_quality}, {self.battery}, {self.network}, {self.description},
-                     {self.price},  {self.currency}, {self.add_time}'''
-        return out
+    # def __repr__(self):
+    #     out = f'''{self.category}, {self._id}, {self.name}, {self.brand}, {self.model}, {self.processor}, {self.ram},
+    #                  {self.display_size}, {self.display_quality}, {self.battery}, {self.network}, {self.description},
+    #                  {self.price},  {self.currency}, {self.add_time}'''
+    #     return out
 
 
 class Smartphone:
@@ -78,9 +78,9 @@ class Smartphone:
         self.currency = currency
         self.add_time = add_time
 
-    def __repr__(self):
-        out = f'''cat:{self.category}, id:{self._id}, name:{self.name}, brand:{self.brand}, model:{self.model}, pro:{self.processor}, ram:{self.ram},
-                     ds:{self.display_size}, dq:{self.display_quality}, bat:{self.battery}, s{self.double_sim}, {self.description},
-                     {self.price},  {self.currency}, {self.add_time}'''
-        return out
+    # def __repr__(self):
+    #     out = f'''cat:{self.category}, id:{self._id}, name:{self.name}, brand:{self.brand}, model:{self.model}, pro:{self.processor}, ram:{self.ram},
+    #                  ds:{self.display_size}, dq:{self.display_quality}, bat:{self.battery}, s{self.double_sim}, {self.description},
+    #                  {self.price},  {self.currency}, {self.add_time}'''
+    #     return out
 
