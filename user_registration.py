@@ -77,3 +77,6 @@ def create_user(name, email, password, repeat_password):
             sg.popup_error('Not right format of email!', title='ERROR', font=('Bahnschrift', 16), line_width=150)
     else:
         sg.popup_error('User must have a name!', title='ERROR', font=('Bahnschrift', 16), line_width=150)
+
+
+

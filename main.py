@@ -13,6 +13,8 @@ import lists
 import log_in_window as lw
 import add_product as ap
 import database_func as df
+import account
+import PySimpleGUI as sg
 
 
 # I did this all using pyqt5 designer, I have no idea what is going on there
@@ -35,6 +37,7 @@ class Ui_AllBuyCO(object):
         self.account.setObjectName("account")
         self.label = QtWidgets.QPushButton(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(250, 20, 68, 41))
+        self.label.setStyleSheet("background-color: rgb(208, 219, 189);")
         font = QtGui.QFont()
         font.setFamily("Times New Roman")
         font.setPointSize(15)
@@ -735,25 +738,31 @@ class Ui_AllBuyCO(object):
         self.basket.clicked.connect(self.basket_function)
         self.label.clicked.connect(self.search_product)
 
+
     def search_product(self):
 
         self.products = df.search_product(self.search.text())
-        print(self.products)
+        if self.products:
+            print(self.products)
+        else:
+            sg.popup_error('No Products Found', title='ERROR', font=('Bahnschrift', 16), line_width=150)
         # create widget to show
 
     def user_functions(self):
         if not self.user:
             self.user = lw.log_in_window()
         else:
-            lw.account(self.user)
-            # create user window
+            self.Form = QtWidgets.QWidget()
+            acc = account.Ui_Form()
+            acc.setupUi(self.Form, self.user)
+            self.Form.show()
 
     def basket_function(self):
         if self.user:
             basket = df.basket(self.user.id)
             # crete basket window
         else:
-            print('No User')
+            sg.popup_error('No User Found', title='ERROR', font=('Bahnschrift', 16), line_width=150)
 
     def get_category(self):  # using the designer i created 3 filter widgets, this function change widget
         # according to category, also it displays products related to this category
@@ -835,7 +844,7 @@ class Ui_AllBuyCO(object):
         if self.categories.currentText() == 'Smartphone':
             self.products = df.filter_smartphone(user_choices)
         print(self.products)
-        # widget
+
 
 
     def retranslateUi(self, AllBuyCO):
