@@ -15,6 +15,7 @@ import log_in_window as lw
 import add_product as ap
 import database_func as df
 import account
+import view_item
 import PySimpleGUI as sg
 
 
@@ -702,7 +703,6 @@ class Ui_AllBuyCO(object):
         QtCore.QMetaObject.connectSlotsByName(AllBuyCO)
         # Stuff for laptop filtering
         # group of processors that are available to check from radiobutton
-        self.filter_laptop_widget.show()
         self.filter_tablet_widget.hide()
         self.filter_phone_widget.hide()
         self.radio_processor = [self.i3, self.i5, self.i7, self.i9, self.r3, self.r5, self.r7, self.r9, self.m1,
@@ -728,7 +728,7 @@ class Ui_AllBuyCO(object):
         for ram in lists.smartphone_ram:
             self.ram_tablet.addItem(str(ram))
             self.ram_smartphone.addItem((str(ram)))
-        # add values for brand in comboboxes
+        # add values for brand in combobox
         for brand in lists.smartphone_brands:
             self.phone_brand.addItem(brand)
         for brand in lists.tablet_brands:
@@ -744,61 +744,52 @@ class Ui_AllBuyCO(object):
         self.label.clicked.connect(self.search_product)
         # create area for displaying products
         self.display_products(self.products)
-        # self.products_area = QtWidgets.QGroupBox()
-        # self.button_list = []
-        # self.goupboxes = []
-        # self.scroll = QtWidgets.QScrollArea(self.centralwidget)
-        # self.scroll.setGeometry(QtCore.QRect(290, 100, 961, 500))
-        # self.scroll.setObjectName("scroll")
-        #
-        # height = 10
-        # for i in range(len(self.products)):
-        #     self.product_groupbox = QtWidgets.QGroupBox(self.scroll)
-        #     self.product_groupbox.setGeometry(QtCore.QRect(10, height, 940, 50))
-        #     self.goupboxes.append(self.product_groupbox)
-        #     self.product = QtWidgets.QLabel(self.product_groupbox)
-        #     self.product.setGeometry(QtCore.QRect(20, 9, 770, 30))
-        #     self.product.setText(f'Name: {self.products[i].name}, Brand: {self.products[i].brand}, Processor: {self.products[i].processor}, Price: {self.products[i].price}{self.products[i].currency}')
-        #     self.button_list.append(QtWidgets.QPushButton(self.product_groupbox))
-        #     self.button_list[i].setText('View More')
-        #     self.button_list[i].setGeometry(QtCore.QRect(830, 10, 101, 31))
-        #     self.button_list[i].setStyleSheet("background-color: rgb(208, 219, 189);")
-        #     height += 60
 
     def display_products(self, products):
         self.button_list = []
         self.scroll = QtWidgets.QScrollArea(self.centralwidget)
-        self.scroll.setGeometry(QtCore.QRect(290, 100, 961, 500))
+        self.scroll.setGeometry(QtCore.QRect(290, 100, 960, 500))
         height = 10
-        for i in range(len(self.products)):
+        for i in range(len(products)):
             self.product_groupbox = QtWidgets.QGroupBox(self.scroll)
             self.product_groupbox.setGeometry(QtCore.QRect(10, height, 940, 50))
             self.product = QtWidgets.QLabel(self.product_groupbox)
             self.product.setGeometry(QtCore.QRect(20, 9, 770, 30))
+            if products[i].category == 1:
+                type = 'Laptop'
+            if products[i].category == 2:
+                type = 'Tablet'
+            if products[i].category == 3:
+                type = 'Smartphone'
             self.product.setText(
-                f'Name: {products[i].name}, Brand: {products[i].brand}, Processor: {products[i].processor}, Price: {products[i].price}{products[i].currency}')
+                f'Category: {type};  Name: {products[i].name};  Brand: {products[i].brand};  Processor: {products[i].processor};  Price: {products[i].price}{products[i].currency}')
             self.button_list.append(QtWidgets.QPushButton(self.product_groupbox))
             self.button_list[i].setText('View More')
-            self.button_list[i].setGeometry(QtCore.QRect(830, 10, 101, 31))
+            self.button_list[i].setGeometry(QtCore.QRect(830, 10, 100, 30))
             self.button_list[i].setStyleSheet("background-color: rgb(208, 219, 189);")
+            self.button_list[i].clicked.connect(lambda ch, i=i: self.view_more(products,i))
             height += 60
-        print(self.button_list)
+        self.scroll.show()
 
     def search_product(self):
         found_products = df.search_product(self.search.text())
         if found_products:
-            try:
-                self.display_products(found_products)
-            except Exception:
-                print(Exception)
-
+            self.display_products(found_products)
         else:
             sg.popup_error('No Products Found', title='ERROR', font=('Bahnschrift', 16), line_width=150)
+
+    def view_more(self, products, i):
+        self.Form = QtWidgets.QWidget()
+        view = view_item.Ui_Form()
+        view.setupUi(self.Form, products[i])
+        self.Form.show()
+
 
     def user_functions(self):
         if not self.user:
             self.user = lw.log_in_window()
         else:
+
             self.Form = QtWidgets.QWidget()
             acc = account.Ui_Form()
             acc.setupUi(self.Form, self.user)
@@ -816,11 +807,7 @@ class Ui_AllBuyCO(object):
         else:
             sg.popup_error('No User Found', title='ERROR', font=('Bahnschrift', 16), line_width=150)
 
-    def hook_item(self, widget, items):
-
-        pass
-
-    def get_category(self):  # using the designer i created 3 filter widgets, this function change widget
+    def get_category(self):  # using the designer I created 3 filter widgets, this function change widget
         # according to category, also it displays products related to this category
         """
         :return: change the filter widget according to category
@@ -892,14 +879,15 @@ class Ui_AllBuyCO(object):
                 quality.setAutoExclusive(False)
                 quality.setChecked(False)
                 quality.setAutoExclusive(True)
-        print(user_choices)
         if self.categories.currentText() == 'Laptop':
             self.products = df.filter_laptop(user_choices)
         if self.categories.currentText() == 'Tablet':
             self.products = df.filter_tablet(user_choices)
         if self.categories.currentText() == 'Smartphone':
             self.products = df.filter_smartphone(user_choices)
-        print(self.products)
+
+        self.display_products(self.products)
+        # print(self.products)
 
 
 

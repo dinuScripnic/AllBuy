@@ -3,6 +3,7 @@ import sqlite3
 import os.path
 import PySimpleGUI as sg
 from categories import *
+import random
 
 
 def check_db():  # creates the dummy database if it doesn't exist
@@ -226,6 +227,7 @@ def get_all_products():
         product_data = cursor.fetchall()  # searches for products
         for object in product_data:
             output.append(Smartphone(category=object[0], _id=object[1], name=object[2], brand=object[3], model=object[4], processor=object[5], ram=object[6], battery=object[11], display_size=object[7], display_quality=object[8], storage=object[10], double_sim=object[9], description=object[12], price=object[13], currency=object[14], add_time=object[15]))
+        random.shuffle(output)
         return output
     except sqlite3.Error as er:
         print(f'Error: {er}')
