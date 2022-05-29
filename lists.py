@@ -44,4 +44,3 @@ smartphone_processor = ["Qualcomm", "Samsung", "Mediatek", "Kirin", "Apple"]
 smartphone_processor.sort()
 smartphone_ram = [3, 4, 6, 8, 12, 16]
 smartphone_storage = [32, 64, 128, 256, 512, 1024]
-connectors = ["Micro-USB", "USB-C", "Lightning"]

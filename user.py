@@ -11,6 +11,3 @@ class User:
         self.email = email
         self.password = password
         self.join_date = join_date
-
-    def __repr__(self):
-        return f'{self.id}, {self.name}, {self.email}'

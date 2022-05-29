@@ -1,6 +1,8 @@
 import PySimpleGUI as sg
 import lists
 
+# layouts for adding products
+
 sg.theme('NeutralBlue')
 layout_for_laptop = [
         [sg.Text('Name', font=('Bookman Old Style', 14)), sg.Input(key='-laptop_name-', font=('Bookman Old Style', 11))],
@@ -67,8 +69,7 @@ layout_for_smartphone = [
                 [sg.Text('Processor', size=(14, 1), font=('Bookman Old Style', 11)), sg.Combo(lists.smartphone_processor, enable_events=True, key='-phone_processor-', size=(20, 1), font=('Bookman Old Style', 11))],
                 [sg.Text('Ram', size=(14, 1), font=('Bookman Old Style', 11)), sg.Combo(lists.smartphone_ram, default_value=4, enable_events=True, key='-phone_ram-', size=(4, 1), font=('Bookman Old Style', 11)), sg.Text('GB', size=(10, 1), font=('Bookman Old Style', 11))],
                 [sg.Text('Battery Capacity', size=(14, 1), font=('Bookman Old Style', 11)), sg.Input(key='-phone_battery-', size=(21, 1), font=('Bookman Old Style', 11)), sg.Text('mAh', size=(10, 1), font=('Bookman Old Style', 11))],
-                [sg.Text('Storage Size', size=(14, 1), font=('Bookman Old Style', 11)), sg.Combo(lists.smartphone_storage, enable_events=True, key='-phone_storage-', size=(4, 1), font=('Bookman Old Style', 11)), sg.Text('GB')],
-                [sg.Text('Connector', size=(14, 1), font=('Bookman Old Style', 11)), sg.Combo(lists.connectors, enable_events=True, key='-connector-', size=(10,1), font=('Bookman Old Style', 11))]
+                [sg.Text('Storage Size', size=(14, 1), font=('Bookman Old Style', 11)), sg.Combo(lists.smartphone_storage, enable_events=True, key='-phone_storage-', size=(4, 1), font=('Bookman Old Style', 11)), sg.Text('GB')]
             ], font=('Bookman Old Style', 14),  size=(500, 200))
         ],
         [

@@ -8,6 +8,7 @@ import random
 
 def check_db():  # creates the dummy database if it doesn't exist
     if not os.path.exists('AllBuy.db'):
+        print('Create Database')
         connection = sqlite3.connect('AllBuy.db')
         cursor = connection.cursor()
         create_workspace = '''CREATE TABLE costumers(

@@ -3,19 +3,24 @@ import lists
 
 
 def validation(category, brand, processor, ram, storage, display_size, display_quality, price, currency, *args):
+    """
+    Check the validity of the input before sends data to database
+    Works for all categories in one go
+    If something is not valid, sends an error
+    """
     if category == "Laptop":
-        if brand not in lists.laptop_brands:
+        if brand not in lists.laptop_brands:  # check validity of brand
             sg.PopupError('Invalid value for Brand')
             return False
-        if processor not in lists.laptop_processors:
+        if processor not in lists.laptop_processors:  # check validity of processor
             sg.PopupError('Invalid value for Processor')
             return False
-        if ram not in lists.laptop_ram:
+        if ram not in lists.laptop_ram:  # check validity of ram
             sg.PopupError('Invalid value for RAM')
             return False
-        if display_size not in lists.laptop_display_size:
+        if display_size not in lists.laptop_display_size:  # check validity of display size
             sg.PopupError('Invalid value for Display Size')
-        if storage not in lists.laptop_storage_size:
+        if storage not in lists.laptop_storage_size:  # check validity of storage size
             sg.PopupError('Invalid value for Storage Size')
             return False
     if category in ['Tablet', 'Smartphone']:

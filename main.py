@@ -17,7 +17,8 @@ import database_func as df
 import account
 import view_item
 import PySimpleGUI as sg
-
+import conversion as con
+import user_registration as ur
 
 # I did this all using pyqt5 designer, I have no idea what is going on there
 # I marked where my part starts
@@ -25,7 +26,7 @@ class Ui_AllBuyCO(object):
 
     def setupUi(self, AllBuyCO):
         AllBuyCO.setObjectName("AllBuyCO")
-        AllBuyCO.resize(1280, 687)
+        AllBuyCO.resize(1280, 690)
         AllBuyCO.setStyleSheet("background-color: rgb(146,170,157);")
         self.centralwidget = QtWidgets.QWidget(AllBuyCO)
         self.centralwidget.setObjectName("centralwidget")
@@ -755,6 +756,10 @@ class Ui_AllBuyCO(object):
             self.product_groupbox.setGeometry(QtCore.QRect(10, height, 940, 50))
             self.product = QtWidgets.QLabel(self.product_groupbox)
             self.product.setGeometry(QtCore.QRect(20, 9, 770, 30))
+            font = QtGui.QFont()
+            font.setFamily("Times New Roman")
+            font.setPointSize(10)
+            self.product.setFont(font)
             if products[i].category == 1:
                 type = 'Laptop'
             if products[i].category == 2:
@@ -768,6 +773,7 @@ class Ui_AllBuyCO(object):
             self.button_list[i].setGeometry(QtCore.QRect(830, 10, 100, 30))
             self.button_list[i].setStyleSheet("background-color: rgb(208, 219, 189);")
             self.button_list[i].clicked.connect(lambda ch, i=i: self.view_more(products,i))
+            self.button_list[i].setFont(font)
             height += 60
         self.scroll.show()
 
@@ -784,7 +790,6 @@ class Ui_AllBuyCO(object):
         view.setupUi(self.Form, products[i])
         self.Form.show()
 
-
     def user_functions(self):
         if not self.user:
             self.user = lw.log_in_window()
@@ -797,15 +802,81 @@ class Ui_AllBuyCO(object):
 
     def basket_function(self):
         if self.user:
-            basket = df.basket(self.user.id)
-            self.basket = QtWidgets.QMainWindow()
-            self.scroll = QtWidgets.QScrollArea()
-            basket_dictionary = {}
-            for item in range(len(basket)):
-                basket_dictionary[item] = basket[item]
-            print(basket_dictionary)
+            try:
+                font = QtGui.QFont()
+                font.setFamily("Times New Roman")
+                font.setPointSize(20)
+                basket = df.basket(self.user.id)
+                self.basket = QtWidgets.QScrollArea()
+                self.basket.setGeometry(QtCore.QRect(200, 200, 820, 300))
+                self.basket.setStyleSheet("background-color: rgb(146,170,157);")
+                self.basket_label = QtWidgets.QLabel(self.basket)
+                self.basket_label.setText(f'BASKET')
+                self.basket_label.setGeometry(QtCore.QRect(10, 10, 200, 30))
+                self.basket_label.setFont(font)
+                self.user_label = QtWidgets.QLabel(self.basket)
+                self.user_label.setText(f'Client: {self.user.name}')
+                self.user_label.setGeometry(QtCore.QRect(250, 10, 560, 30))
+                self.user_label.setAlignment(QtCore.Qt.AlignRight)
+                self.user_label.setFont(font)
+                font.setPointSize(10)
+                self.finish = QtWidgets.QPushButton(self.basket)
+                self.finish.setText('Finish Shopping')
+                self.finish.setGeometry(QtCore.QRect(10, 60, 120, 30))
+                self.finish.clicked.connect(lambda ch: self.finish_shopping(basket))
+                self.finish.setStyleSheet("background-color: rgb(208, 219, 189);")
+                self.finish.setFont(font)
+                self.currency_label = QtWidgets.QLabel(self.basket)
+                self.currency_label.setText(f'I will pay in')
+                self.currency_label.setGeometry(QtCore.QRect(140, 60, 100, 30))
+                self.currency_label.setFont(font)
+                self.currency = QtWidgets.QComboBox(self.basket)
+                self.currency.setGeometry(QtCore.QRect(240, 60, 50, 30))
+                self.currency.setStyleSheet("background-color: rgb(255,255,255);")
+                self.currency.setFont(font)
+                for currency in lists.currency:
+                    self.currency.addItem(str(currency))
+                height = 100
+                for i in range(len(basket)):
+                    self.product_groupbox = QtWidgets.QGroupBox(self.basket)
+                    self.product_groupbox.setGeometry(QtCore.QRect(10, height, 800, 50))
+                    self.product = QtWidgets.QLabel(self.product_groupbox)
+                    self.product.setGeometry(QtCore.QRect(20, 10, 770, 30))
+                    if basket[i].category == 1:
+                        type = 'Laptop'
+                    if basket[i].category == 2:
+                        type = 'Tablet'
+                    if basket[i].category == 3:
+                        type = 'Smartphone'
+                    self.product.setText(
+                        f'Category: {type};  Name: {basket[i].name};  Brand: {basket[i].brand};  Processor: {basket[i].processor};  Price: {basket[i].price}{basket[i].currency}')
+                    self.product.setFont(font)
+                    height += 60
+                self.basket.show()
+            except Exception as e:
+                print(e)
         else:
             sg.popup_error('No User Found', title='ERROR', font=('Bahnschrift', 16), line_width=150)
+
+    def finish_shopping(self, basket):
+        print(self.user)
+        total_price = []
+        products = []
+        for product in basket:
+            products.append(product.name)
+            if product.currency == '$':
+                total_price.append(con.usd(product.price)[lists.currency.index(self.currency.currentText())])
+            if product.currency == '€':
+                total_price.append(con.eur(product.price)[lists.currency.index(self.currency.currentText())])
+            if product.currency == '£':
+                total_price.append(con.gbp(product.price)[lists.currency.index(self.currency.currentText())])
+            if product.currency == 'Fr.':
+                total_price.append(con.chf(product.price)[lists.currency.index(self.currency.currentText())])
+            if product.currency == '¥':
+                total_price.append(con.jpy(product.price)[lists.currency.index(self.currency.currentText())])
+        total_price = round(sum(total_price), 2)
+        ur.email_finish(user.name, products, total_price)
+
 
     def get_category(self):  # using the designer I created 3 filter widgets, this function change widget
         # according to category, also it displays products related to this category
@@ -885,11 +956,7 @@ class Ui_AllBuyCO(object):
             self.products = df.filter_tablet(user_choices)
         if self.categories.currentText() == 'Smartphone':
             self.products = df.filter_smartphone(user_choices)
-
         self.display_products(self.products)
-        # print(self.products)
-
-
 
     def retranslateUi(self, AllBuyCO):
         _translate = QtCore.QCoreApplication.translate
@@ -974,6 +1041,7 @@ class Ui_AllBuyCO(object):
 
 if __name__ == "__main__":
     import sys
+    df.check_db()
     app = QtWidgets.QApplication(sys.argv)
     AllBuyCO = QtWidgets.QMainWindow()
     ui = Ui_AllBuyCO()

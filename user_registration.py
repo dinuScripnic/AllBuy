@@ -60,7 +60,7 @@ def create_user(name, email, password, repeat_password):
                     email_verification(name, email, random_code)
                     # add new import
                     if rw.email_confirmation_window(random_code):
-                        # creates a object of class user
+                        # creates an object of class user
                         user = User(name, email, password)
                         # adds to database
                         df.add_costumer(user)
@@ -79,4 +79,28 @@ def create_user(name, email, password, repeat_password):
         sg.popup_error('User must have a name!', title='ERROR', font=('Bahnschrift', 16), line_width=150)
 
 
+def email_finish(user, products, price):
+    """
+
+    :param name: user_name
+    :param email: user_email
+    :param code: randomly generated to verify email
+    :return: sends email to mentioned email address with the code in order to verify if this email belongs to our user
+    """
+    with smtplib.SMTP('smtp.gmail.com', 587) as server:
+        server.starttls()
+        try:
+            server.login('allbuyco2022@gmail.com', 'onxvgueeekrealob')
+
+            subject = 'Purchase Successful'
+            for product in products:
+                products += f'{product}, '
+            body = f'Hi {user.name}! This is a AllBuy!\n\tYour  Your code is: {code}.'
+
+            msg = f'Subject: {subject}\n\n{body}'
+            print(msg)
+
+            # server.sendmail('allbuyco2022@gmail.com', f'{email}', msg)
+        except smtplib.SMTPAuthenticationError as error:
+            print(f'Something is wrong with sender data {error}')
 
