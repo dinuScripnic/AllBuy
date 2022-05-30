@@ -152,16 +152,8 @@ class Ui_Form(object):
         self.image.setScaledContents(True)
         self.description.setText(f'Description:\n{self.product.description}')
 
-        self.basket_button.clicked.connect(self.add_product_to_basket)
-        self.reviews_button.clicked.connect(self.see_reviews)
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
-
-    def add_product_to_basket(self):
-        print(self.product._id)
-
-    def see_reviews(self):
-        print(self.product._id)
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
@@ -176,14 +168,3 @@ class Ui_Form(object):
         self.basket_button.setText(_translate("Form", "Add to basket"))
         self.reviews_button.setText(_translate("Form", "See Reviews"))
         self.label_price.setText(_translate("Form", f"Price:  {self.product.price} {self.product.currency}"))
-
-
-# if __name__ == "__main__":
-#     import sys
-#     product = Laptop('Asus Zenbook', 'Asus', 'UX425', 'I7', 16, 14, 'FullHD', True, 512, False, None, 'Very cool laptop', 1000, '$')
-#     app = QtWidgets.QApplication(sys.argv)
-#     Form = QtWidgets.QWidget()
-#     ui = Ui_Form()
-#     ui.setupUi(Form, product)
-#     Form.show()
-#     sys.exit(app.exec_())

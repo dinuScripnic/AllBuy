@@ -84,8 +84,10 @@ def check_db():  # creates the dummy database if it doesn't exist
 
 def add_costumer(user):
     """
+
         :param user: object of class User
         :return: same User, but in process used is added in database
+
     """
     try:  # works only if email is unique
         connection = sqlite3.connect('AllBuy.db')
@@ -206,6 +208,12 @@ def add_smartphone(smartphone):
 
 
 def get_all_products():
+    """
+
+        :return: return a list of all products,
+        not the most optimal way in working with big databases, but for now it works
+
+    """
     try:
         connection = sqlite3.connect('AllBuy.db')
         output = []
@@ -443,6 +451,12 @@ def filter_smartphone(parameters):
 
 
 def basket(user_id):
+    """
+
+        :param user_id: id of a user with certain basket
+        :return: all products from users basket
+
+    """
     try:
         connection = sqlite3.connect('AllBuy.db')
         cursor = connection.cursor()
@@ -486,7 +500,52 @@ def basket(user_id):
             cursor.close()
             connection.close()
 
-# add review
-# add to basket
+
+def add_to_basket(user_id, product_id, product_category):
+    """
+            :param user_id: user id
+            :param product_id: product id
+            :param product_category: product category
+            :return: adds product to table basket from database
+        """
+    try:  # works only if email is unique
+        connection = sqlite3.connect('AllBuy.db')
+        cursor = connection.cursor()
+        add_to_basket = f'''INSERT INTO basket VALUES (\'{user_id}\', \'{product_id}\', {product_category});'''
+        cursor.execute(add_to_basket)
+        connection.commit()
+    except sqlite3.Error as e:
+        print(e)
+    finally:
+        if connection:
+            cursor.close()
+            connection.close()  # closes connection with database
+
+
+def finish_purchase(user):
+    """
+        :param user: user id
+        :return: deletes basket of this user, finish shopping
+    """
+    try:  # works only if email is unique
+        connection = sqlite3.connect('AllBuy.db')
+        cursor = connection.cursor()
+        delete_basket = f'''DELETE FROM basket WHERE user = \'{user}\';'''
+        cursor.execute(delete_basket)
+        connection.commit()
+    except sqlite3.Error as e:
+        print(e)
+    finally:
+        if connection:
+            cursor.close()
+            connection.close()  # closes connection with database
+
+
+def add_review():
+    pass
+
+
+def see_reviews():
+    pass
 
 

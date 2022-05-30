@@ -79,13 +79,15 @@ def create_user(name, email, password, repeat_password):
         sg.popup_error('User must have a name!', title='ERROR', font=('Bahnschrift', 16), line_width=150)
 
 
-def email_finish(user, products, price):
+def email_finish(name, email, products, price, currency):
     """
 
     :param name: user_name
     :param email: user_email
-    :param code: randomly generated to verify email
-    :return: sends email to mentioned email address with the code in order to verify if this email belongs to our user
+    :param products: name of products you have bought
+    :param price: total price of you products in currency you have selected
+    :param currency: currency you have selected
+    :return: sends email to mentioned email address with the confirmation of purchase
     """
     with smtplib.SMTP('smtp.gmail.com', 587) as server:
         server.starttls()
@@ -93,14 +95,26 @@ def email_finish(user, products, price):
             server.login('allbuyco2022@gmail.com', 'onxvgueeekrealob')
 
             subject = 'Purchase Successful'
-            for product in products:
-                products += f'{product}, '
-            body = f'Hi {user.name}! This is a AllBuy!\n\tYour  Your code is: {code}.'
+            out = ''
+            for product in products:  # enumerates all the products form basket
+                out += f'{product}, '
+
+            if currency == '$':  # I do this because it does not support this signs, they are not in ascii
+                currency = 'USD'
+            elif currency == '€':
+                currency = 'EUR'
+            elif currency == '£':
+                currency = 'GBP'
+            elif currency == 'Fr.':
+                currency = 'Swiss Franc'
+            elif currency == '¥':
+                currency = 'Yen'
+
+            body = f'Hi {name}! This is a AllBuy!\nCongratulation with your purchase. You have bought: {out[:-2]}\nThe total price would be {price} {currency}'
 
             msg = f'Subject: {subject}\n\n{body}'
-            print(msg)
 
-            # server.sendmail('allbuyco2022@gmail.com', f'{email}', msg)
+            server.sendmail('allbuyco2022@gmail.com', f'{email}', msg)
         except smtplib.SMTPAuthenticationError as error:
             print(f'Something is wrong with sender data {error}')
 
