@@ -64,7 +64,7 @@ def check_db():  # creates the dummy database if it doesn't exist
                                   FOREIGN KEY (id) REFERENCES product(id) on DELETE CASCADE on UPDATE CASCADE
                               );
                               CREATE TABLE review(
-                                  id VARCHAR(40) PRIMARY KEY,
+                                  id VARCHAR(40),
                                   grade FLOAT,
                                   description VARCHAR(4000),
                                   FOREIGN KEY (id) REFERENCES product(id) on DELETE CASCADE on UPDATE CASCADE
@@ -508,7 +508,7 @@ def add_to_basket(user_id, product_id, product_category):
             :param product_category: product category
             :return: adds product to table basket from database
         """
-    try:  # works only if email is unique
+    try:
         connection = sqlite3.connect('AllBuy.db')
         cursor = connection.cursor()
         add_to_basket = f'''INSERT INTO basket VALUES (\'{user_id}\', \'{product_id}\', {product_category});'''
@@ -519,7 +519,7 @@ def add_to_basket(user_id, product_id, product_category):
     finally:
         if connection:
             cursor.close()
-            connection.close()  # closes connection with database
+            connection.close()
 
 
 def finish_purchase(user):
@@ -538,14 +538,42 @@ def finish_purchase(user):
     finally:
         if connection:
             cursor.close()
-            connection.close()  # closes connection with database
+            connection.close()
 
 
-def add_review():
-    pass
+def add_review(product_id, grade, review):
+    """
+            :param product_id: product id
+            :param grade: product grade
+            :param review: product review
+            :return: adds review
+        """
+    try:
+        connection = sqlite3.connect('AllBuy.db')
+        cursor = connection.cursor()
+        add_review = f'''INSERT INTO review VALUES (\'{product_id}\', \'{grade}\', \'{review}\');'''
+        cursor.execute(add_review)
+        connection.commit()
+    except sqlite3.Error as e:
+        print(e)
+    finally:
+        if connection:
+            cursor.close()
+            connection.close()
 
 
-def see_reviews():
-    pass
-
-
+def see_reviews(product_id):
+    try:
+        connection = sqlite3.connect('AllBuy.db')
+        cursor = connection.cursor()
+        get_reviews = f'''SELECT grade, description FROM review WHERE id = \'{product_id}\';'''
+        cursor.execute(get_reviews)
+        out = cursor.fetchall()
+        connection.commit()
+        return out
+    except sqlite3.Error as e:
+        print(e)
+    finally:
+        if connection:
+            cursor.close()
+            connection.close()

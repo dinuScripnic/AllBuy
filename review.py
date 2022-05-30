@@ -12,7 +12,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class Ui_Form(object):
-    def setupUi(self, Form):
+    def setupUi(self, Form, product, reviews):
+        self.product = product
         Form.setObjectName("Form")
         Form.resize(619, 436)
         Form.setStyleSheet("background-color: rgb(146,170,157);")
@@ -21,20 +22,8 @@ class Ui_Form(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 339, 349))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 340, 350))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        self.scrollArea_2 = QtWidgets.QScrollArea(self.scrollAreaWidgetContents)
-        self.scrollArea_2.setGeometry(QtCore.QRect(10, 10, 321, 91))
-        font = QtGui.QFont()
-        font.setFamily("Times New Roman")
-        self.scrollArea_2.setFont(font)
-        self.scrollArea_2.setStyleSheet("background-color: rgb(208, 219, 189);")
-        self.scrollArea_2.setWidgetResizable(True)
-        self.scrollArea_2.setObjectName("scrollArea_2")
-        self.scrollAreaWidgetContents_2 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_2.setGeometry(QtCore.QRect(0, 0, 319, 89))
-        self.scrollAreaWidgetContents_2.setObjectName("scrollAreaWidgetContents_2")
-        self.scrollArea_2.setWidget(self.scrollAreaWidgetContents_2)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.name_label = QtWidgets.QLabel(Form)
         self.name_label.setGeometry(QtCore.QRect(10, 10, 421, 31))
@@ -59,7 +48,7 @@ class Ui_Form(object):
         self.grade.setProperty("value", 5)
         self.grade.setOrientation(QtCore.Qt.Horizontal)
         self.grade.setObjectName("grade")
-        self.textBrowser = QtWidgets.QTextBrowser(Form)
+        self.textBrowser = QtWidgets.QTextEdit(Form)
         self.textBrowser.setGeometry(QtCore.QRect(370, 130, 231, 211))
         font = QtGui.QFont()
         font.setFamily("Times New Roman")
@@ -75,22 +64,48 @@ class Ui_Form(object):
         self.pushButton.setStyleSheet("background-color: rgb(208, 219, 189);")
         self.pushButton.setObjectName("pushButton")
 
+        if len(reviews) != 0:
+            self.avg_grade = round(sum([reviews[i][0] for i in range(len(reviews))])/len(reviews), 1)
+            height = 5
+            for review in reviews:
+                label = QtWidgets.QTextBrowser(self.scrollAreaWidgetContents)
+                if len(review[1]) > 40:
+                    label.setGeometry(QtCore.QRect(10, height, 320, 100))
+                    height += 105
+                else:
+                    label.setGeometry(QtCore.QRect(10, height, 320, 50))
+                    height += 55
+                label.setText(f'Grade: {review[0]}\n{review[1]}')
+                label.setFont(font)
+        else:
+            self.avg_grade = "No grade yet"
+            label = QtWidgets.QLabel(self.scrollAreaWidgetContents)
+            label.setGeometry(QtCore.QRect(10, 5, 320, 30))
+            label.setText('No reviews yet')
+            label.setFont(font)
+
+
+
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
+
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
-        self.name_label.setText(_translate("Form", "TextLabel"))
-        self.grade_label.setText(_translate("Form", "Grade:"))
+        self.name_label.setText(_translate("Form", f"Reviews For {self.product}"))
+        self.grade_label.setText(_translate("Form", f"Grade: {self.avg_grade}"))
         self.pushButton.setText(_translate("Form", "Add Review"))
 
 
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    Form = QtWidgets.QWidget()
-    ui = Ui_Form()
-    ui.setupUi(Form)
-    Form.show()
-    sys.exit(app.exec_())
+# if __name__ == "__main__":
+#     import sys
+#     product_name = 'Asus Zenbook'
+#     product_id = '9a19f051-d52e-11ec-b7fe-e884a5fda5dd'
+#     reviews = [[9, 'Piorfect'], [7, 'I was expecting more, very warm proc']]
+#     app = QtWidgets.QApplication(sys.argv)
+#     Form = QtWidgets.QWidget()
+#     ui = Ui_Form()
+#     ui.setupUi(Form, product_name, product_id, reviews)
+#     Form.show()
+#     sys.exit(app.exec_())

@@ -1,5 +1,5 @@
 import PySimpleGUI as sg
-import user_registration as ur
+import user_functionality as ur
 
 
 def register_window():

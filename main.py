@@ -9,16 +9,16 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt, QSize
 import PySimpleGUI as sg
 import lists
 import log_in_window as lw
 import add_product as ap
 import database_func as df
 import account
+import review
 import view_item
 import conversion as con
-import user_registration as ur
+import user_functionality as ur
 
 
 # I did this all using pyqt5 designer, I have no idea what is going on there
@@ -879,11 +879,25 @@ class Ui_AllBuyCO(object):
         view = view_item.Ui_Form()
         view.setupUi(self.Form, product[i])
         view.basket_button.clicked.connect(lambda: self.add_product_to_basket(product[i]))
-        view.reviws_button.clicked.connect(lambda: self.read_reviews(product[i]))
+        view.reviews_button.clicked.connect(lambda: self.read_reviews(product[i]))
         self.Form.show()
 
     def read_reviews(self, product):
-        print(product._id)
+        reviews = df.see_reviews(product._id)
+        self.Form_review = QtWidgets.QWidget()
+        view = review.Ui_Form()
+        view.setupUi(self.Form_review, product.name, reviews)
+        view.pushButton.clicked.connect(lambda: self.add_review(product._id, view.grade.value(), view.textBrowser.toPlainText()))
+        self.Form_review.show()
+
+    def add_review(self,product_id, grade, review):
+        if len(review) > 4000:
+            sg.popup_error('Review to long', title='ERROR', font=('Bahnschrift', 16), line_width=150)
+        elif len(review) == 0:
+            sg.popup_error('Review to short', title='ERROR', font=('Bahnschrift', 16), line_width=150)
+        else:
+            df.add_review(product_id, grade, review)
+            self.Form_review.deleteLater()
 
     def add_product_to_basket(self, product):
         if self.user:
