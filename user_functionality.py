@@ -117,4 +117,3 @@ def email_finish(name, email, products, price, currency):
             server.sendmail('allbuyco2022@gmail.com', f'{email}', msg)
         except smtplib.SMTPAuthenticationError as error:
             print(f'Something is wrong with sender data {error}')
-

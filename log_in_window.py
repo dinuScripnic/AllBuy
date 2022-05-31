@@ -23,14 +23,20 @@ def log_in_window():
     window = sg.Window("Log in", layout, element_justification="c", size=(350, 150))
     while True:
         event, values = window.read()
+
         if event == sg.WIN_CLOSED:
             break
+
         elif event == "Log in":
+            # searches for this user in the database
             out = df.get_user(values["-email-"], values["-password-"])
             if out:
+                # returns and closes window if everything is ok
                 window.close()
                 return out
+
         elif event == "Register":
+            # if user wants to register a new profile, closes the logging in and opens a new widget
             window.close()
             out = rw.register_window()
             return out

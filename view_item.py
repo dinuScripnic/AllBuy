@@ -119,8 +119,9 @@ class Ui_Form(object):
         self.label_price.setFont(font)
         self.label_price.setObjectName("label_price")
 
+        # displays the right information and image according to category
         if self.product.category == 1:
-            self.pixmap = QPixmap('laptop.jpg')
+            self.pixmap = QPixmap('photos/laptop.jpg')
             if self.product.ssd:
                 self.label_storage.setText(f"Storage: SSD {self.product.storage} GB")
             if not self.product.ssd:
@@ -131,7 +132,7 @@ class Ui_Form(object):
                 self.label_extra.setText(f"Graphics:  Integrated")
 
         if self.product.category == 2:
-            self.pixmap = QPixmap('tablet.jpg')
+            self.pixmap = QPixmap('photos/tablet.jpg')
             if self.product.network:
                 network = 'Wifi + LTE'
             else:
@@ -140,7 +141,7 @@ class Ui_Form(object):
             self.label_extra.setText(f"Battery: {self.product.battery} mAh")
 
         if self.product.category == 3:
-            self.pixmap = QPixmap('smartphone.jpg')
+            self.pixmap = QPixmap('photos/smartphone.jpg')
             if self.product.double_sim:
                 sim = 'Double Sim'
             else:

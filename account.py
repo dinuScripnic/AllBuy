@@ -12,6 +12,9 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QPixmap
 
 
+# this  iw widget for user data
+# on it would be displayed basic information about the user and user image
+# in the future would be nice to add personalisation possibility and change password and change account
 class Ui_Form(object):
     def setupUi(self, Form, user):
         self.user = user
@@ -85,10 +88,9 @@ class Ui_Form(object):
         self.user_date.setObjectName("user_date")
 
         # displays user image
-        self.pixmap = QPixmap('user.jpg')
+        self.pixmap = QPixmap('photos/user.jpg')
         self.label.setPixmap(self.pixmap)
         self.label.setScaledContents(True)
-
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -105,4 +107,3 @@ class Ui_Form(object):
         self.user_password.setText(_translate("Form", f"{self.user.password}"))
         self.user_email.setText(_translate("Form", f"{self.user.email}"))
         self.user_date.setText(_translate("Form", f"{self.user.join_date}"))
-

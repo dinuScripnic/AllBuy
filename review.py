@@ -63,12 +63,15 @@ class Ui_Form(object):
         self.pushButton.setFont(font)
         self.pushButton.setStyleSheet("background-color: rgb(208, 219, 189);")
         self.pushButton.setObjectName("pushButton")
-
+        form = QtWidgets.QFormLayout()
         if len(reviews) != 0:
+            # calculates average grade of all reviews
             self.avg_grade = round(sum([reviews[i][0] for i in range(len(reviews))])/len(reviews), 1)
             height = 5
+            # display reviews them on scroll area
             for review in reviews:
-                label = QtWidgets.QTextBrowser(self.scrollAreaWidgetContents)
+                label = QtWidgets.QTextBrowser()
+                # if the review is long, creates a bigger display area
                 if len(review[1]) > 40:
                     label.setGeometry(QtCore.QRect(10, height, 320, 100))
                     height += 105
@@ -77,18 +80,21 @@ class Ui_Form(object):
                     height += 55
                 label.setText(f'Grade: {review[0]}\n{review[1]}')
                 label.setFont(font)
+                form.addRow(label)
+            group_box = QtWidgets.QGroupBox()
+            group_box.setLayout(form)
+            self.scrollArea.setWidget(group_box)
+            self.scrollArea.setWidgetResizable(True)
         else:
+            # if there are no reviews, inform the user about
             self.avg_grade = "No grade yet"
             label = QtWidgets.QLabel(self.scrollAreaWidgetContents)
             label.setGeometry(QtCore.QRect(10, 5, 320, 30))
             label.setText('No reviews yet')
             label.setFont(font)
 
-
-
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
-
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
@@ -96,16 +102,3 @@ class Ui_Form(object):
         self.name_label.setText(_translate("Form", f"Reviews For {self.product}"))
         self.grade_label.setText(_translate("Form", f"Grade: {self.avg_grade}"))
         self.pushButton.setText(_translate("Form", "Add Review"))
-
-
-# if __name__ == "__main__":
-#     import sys
-#     product_name = 'Asus Zenbook'
-#     product_id = '9a19f051-d52e-11ec-b7fe-e884a5fda5dd'
-#     reviews = [[9, 'Piorfect'], [7, 'I was expecting more, very warm proc']]
-#     app = QtWidgets.QApplication(sys.argv)
-#     Form = QtWidgets.QWidget()
-#     ui = Ui_Form()
-#     ui.setupUi(Form, product_name, product_id, reviews)
-#     Form.show()
-#     sys.exit(app.exec_())

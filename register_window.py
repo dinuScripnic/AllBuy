@@ -55,14 +55,17 @@ def email_confirmation_window(generated_code):
     window = sg.Window("Confirmation", layout, element_justification="c")
     while True:
         event, values = window.read()
+
         if event == sg.WIN_CLOSED:
             break
-        elif event == "Confirm":
+
+        elif event == "Confirm":  # verifies the validity of the code, the one send by email
             if values["-code-"] == generated_code:
                 window.close()
                 return True
             else:
                 return False
+
         elif event == "Return":
             window.close()
             register_window()

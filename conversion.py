@@ -1,4 +1,5 @@
 from requests import *
+# Converses from one currency to all other
 # United States Dollar - USD
 # Euro - EUR
 # Pound Sterling - GBP

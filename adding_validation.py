@@ -30,7 +30,8 @@ def validation(category, brand, processor, ram, storage, display_size, display_q
                 return False
             try:
                 display_size = float(display_size)
-                if not(display_size >= 10 and display_size < 15):
+                if not(display_size >= 10 and display_size < 15):  # made like this because i need to check for float
+                    # if use range checks just for int
                     sg.PopupError('Invalid value for Display Size')
             except ValueError:
                 sg.PopupError('Invalid format for Display Size!\nNUMBERS ONLY')

@@ -11,3 +11,4 @@ class User:
         self.email = email
         self.password = password
         self.join_date = join_date
+        # in the future ad admin as boolean value, just admins would be able to add products
