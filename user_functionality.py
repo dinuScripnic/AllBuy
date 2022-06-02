@@ -2,7 +2,7 @@ from user import User
 import random
 import smtplib
 import re
-import database_func as df
+import database_functionality as df
 import register_window as rw
 import PySimpleGUI as sg
 

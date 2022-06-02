@@ -1,5 +1,5 @@
 import PySimpleGUI as sg
-import database_func as df
+import database_functionality as df
 import register_window as rw
 
 

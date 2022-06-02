@@ -3,7 +3,7 @@ import layouts
 import lists
 import adding_validation
 from categories import *
-import database_func as df
+import database_functionality as df
 
 
 def add_product_window():

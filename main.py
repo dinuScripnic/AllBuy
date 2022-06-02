@@ -13,7 +13,7 @@ import PySimpleGUI as sg
 import lists
 import log_in_window as lw
 import add_product as ap
-import database_func as df
+import database_functionality as df
 import account
 import review
 import view_item
@@ -794,38 +794,44 @@ class Ui_AllBuyCO(object):
         # creates a scroll area on the main page
         self.scroll = QtWidgets.QScrollArea(self.centralwidget)
         self.scroll.setGeometry(QtCore.QRect(290, 100, 960, 500))
-        form_layout = QtWidgets.QFormLayout()
+        font = QtGui.QFont()
+        font.setFamily("Times New Roman")
+        font.setPointSize(10)
+        if not products:
+            label = QtWidgets.QLabel(self.scroll)
+            label.setFont(font)
+            label.setGeometry(QtCore.QRect(20, 10, 770, 30))
+            label.setText('No Such Products Yet')
         # for each product creates a row with most important info and view_more function
-        for i in range(len(products)):
-            font = QtGui.QFont()
-            font.setFamily("Times New Roman")
-            font.setPointSize(10)
-            # self.product.setFont(font)
-            if products[i].category == 1:
-                type = 'Laptop'
-            if products[i].category == 2:
-                type = 'Tablet'
-            if products[i].category == 3:
-                type = 'Smartphone'
-            self.label_list.append(QtWidgets.QLabel())
-            self.label_list[i].setText(f'Category: {type};  Name: {products[i].name};  Brand: {products[i].brand};  Processor: {products[i].processor};  Price: {products[i].price}{products[i].currency}')
-            self.button_list.append(QtWidgets.QPushButton())
-            self.label_list[i].setFont(font)
-            self.button_list[i].setText('View More')
-            self.button_list[i].setGeometry(QtCore.QRect(830, 10, 100, 30))
-            self.label_list[i].setGeometry(QtCore.QRect(20, 10, 770, 30))
-            self.button_list[i].setStyleSheet("background-color: rgb(208, 219, 189);")
-            # connect each button to view more to see all info about the product
-            self.button_list[i].clicked.connect(lambda ch, i=i: self.view_more(products, i))
-            self.button_list[i].setFont(font)
-            form_layout.addRow(self.label_list[i], self.button_list[i])
-            form_layout.setHorizontalSpacing(10)
-            form_layout.setVerticalSpacing(10)
-            form_layout.addRow(QtWidgets.QLabel('__________________________________________________________________________________________________________________________________'))
-        group_box = QtWidgets.QGroupBox()
-        group_box.setLayout(form_layout)
-        self.scroll.setWidget(group_box)
-        self.scroll.setWidgetResizable(True)
+        else:
+            form_layout = QtWidgets.QFormLayout()
+            for i in range(len(products)):
+                # self.product.setFont(font)
+                if products[i].category == 1:
+                    type = 'Laptop'
+                if products[i].category == 2:
+                    type = 'Tablet'
+                if products[i].category == 3:
+                    type = 'Smartphone'
+                self.label_list.append(QtWidgets.QLabel())
+                self.label_list[i].setText(f'Category: {type};  Name: {products[i].name};  Brand: {products[i].brand};  Processor: {products[i].processor};  Price: {products[i].price}{products[i].currency}')
+                self.button_list.append(QtWidgets.QPushButton())
+                self.label_list[i].setFont(font)
+                self.button_list[i].setText('View More')
+                self.button_list[i].setGeometry(QtCore.QRect(830, 10, 100, 30))
+                self.label_list[i].setGeometry(QtCore.QRect(20, 10, 770, 30))
+                self.button_list[i].setStyleSheet("background-color: rgb(208, 219, 189);")
+                # connect each button to view more to see all info about the product
+                self.button_list[i].clicked.connect(lambda ch, i=i: self.view_more(products, i))
+                self.button_list[i].setFont(font)
+                form_layout.addRow(self.label_list[i], self.button_list[i])
+                form_layout.setHorizontalSpacing(10)
+                form_layout.setVerticalSpacing(10)
+                form_layout.addRow(QtWidgets.QLabel('__________________________________________________________________________________________________________________________________'))
+            group_box = QtWidgets.QGroupBox()
+            group_box.setLayout(form_layout)
+            self.scroll.setWidget(group_box)
+            self.scroll.setWidgetResizable(True)
         self.scroll.show()
 
     def search_product(self):
