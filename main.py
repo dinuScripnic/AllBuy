@@ -1053,7 +1053,7 @@ class Ui_AllBuyCO(object):
         self.medium_tablet_storage.setText(_translate("AllBuyCO", "128-256"))
         self.large_tablet_storage.setText(_translate("AllBuyCO", ">512"))
         self.label_3123.setText(_translate("AllBuyCO", "Ram"))
-        self.lab234.setText(_translate("AllBuyCO", "                 Screen"))
+        self.lab234.setText(_translate("AllBuyCO", "Screen"))
         self.toolBar.setWindowTitle(_translate("AllBuyCO", "toolBar"))
         self.filter_laptop.setText(_translate("AllBuyCO", "Filter"))
         self.groupBox.setTitle(_translate("AllBuyCO", "Power"))
@@ -1104,7 +1104,7 @@ class Ui_AllBuyCO(object):
         self.mdm_storage_phone.setText(_translate("AllBuyCO", "128-256"))
         self.large_smartphone_storage_2.setText(_translate("AllBuyCO", ">512"))
         self.label_2.setText(_translate("AllBuyCO", "Ram"))
-        self.ere.setText(_translate("AllBuyCO", "                 Screen"))
+        self.ere.setText(_translate("AllBuyCO", "Screen"))
 
 
 if __name__ == "__main__":
