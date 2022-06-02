@@ -336,6 +336,8 @@ def filter_laptop(parameters):
             filter += f"laptop.processor = '{parameters['processor']}' AND "
         if 'graphics' in keys:
             filter += f"laptop.graphics = {parameters['graphics']} AND "
+        if 'storage_type' in keys:
+            filter += f"laptop.ssd = {parameters['storage_type']} AND "
         if 'storage_size' in keys:
             if parameters['storage_size'] == '512' or parameters['storage_size'] == '1024':
                 filter += f"laptop.storage_size = {parameters['storage_size']} AND "
