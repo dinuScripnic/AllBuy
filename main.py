@@ -752,7 +752,7 @@ class Ui_AllBuyCO(object):
         self.filter_laptop.clicked.connect(self.get_filters)
         self.filter_tablet.clicked.connect(self.get_filters)
         self.filter_phone_2.clicked.connect(self.get_filters)  # when press button get filters as dictionary
-        self.Add_product.clicked.connect(ap.add_product_window)
+        self.Add_product.clicked.connect(self.add_product)
         self.categories.activated.connect(self.get_category)
         self.basket.clicked.connect(self.basket_function)
         self.label.clicked.connect(self.search_product)
@@ -776,6 +776,12 @@ class Ui_AllBuyCO(object):
             self.filter_tablet_widget.hide()
             self.filter_laptop_widget.hide()
             self.filter_phone_widget.show()
+
+    def add_product(self):
+        if self.user:
+            ap.add_product_window()
+        else:
+            sg.popup_error('No User Found', title='ERROR', font=('Bahnschrift', 16), line_width=150)
 
     def user_functions(self):
         # if there is no user it opens the log_in
@@ -1018,13 +1024,14 @@ class Ui_AllBuyCO(object):
                 total_price.append(con.chf(product.price)[lists.currency.index(currency)])
             if product.currency == '¥':
                 total_price.append(con.jpy(product.price)[lists.currency.index(currency)])
-        # send user email about successful purchase
-        ur.email_finish(self.user.name, self.user.email, products, round(sum(total_price), 2), currency)
-        # delete this user products from database
-        df.finish_purchase(self.user.id)
-        sg.popup_ok('Purchase complete', title='Successful', font=('Bahnschrift', 16), line_width=150)
-        # delete the basket widget
-        self.basket.deleteLater()
+        if lw.email_confirmation_window():
+            # send user email about successful purchase
+            ur.email_finish(self.user.name, self.user.email, products, round(sum(total_price), 2), currency)
+            # delete this user products from database
+            df.finish_purchase(self.user.id)
+            sg.popup_ok('Purchase complete', title='Successful', font=('Bahnschrift', 16), line_width=150)
+            # delete the basket widget
+            self.basket.deleteLater()
 
     def retranslateUi(self, AllBuyCO):
         _translate = QtCore.QCoreApplication.translate

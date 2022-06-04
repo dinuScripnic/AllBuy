@@ -98,7 +98,7 @@ def add_costumer(user):  # adds user ot database, required for register
         connection = sqlite3.connect('AllBuy.db')
         cursor = connection.cursor()
         add_user = f''' INSERT INTO costumers(costumer_id, costumer_name, costumer_email, costumer_password, join_date) 
-                        VALUES ('{user.id}', '{user.name}', '{user.email}', '{user.password}', '{user.join_date}');'''
+                        VALUES ("{user.id}", "{user.name}", "{user.email}", "{user.password}", "{user.join_date}");'''
         cursor.execute(add_user)
         connection.commit()
         return user
@@ -128,7 +128,7 @@ def get_user(email, password):  # get user out of a database, needed for logging
             if password == user_data[3]:  # check if password is right
                 user = User(user_data[1], user_data[2], user_data[3], user_data[0], user_data[4])
                 # creates user according to existing data
-                sg.popup('Logged in')
+                sg.popup("Logged in")
                 return user
             else:
                 sg.popup_error('Wrong Password!', title='ERROR', font=('Bahnschrift', 16), line_width=150)
@@ -153,10 +153,10 @@ def add_laptop(laptop):
         if not laptop.vram:
             laptop.vram = 'NULL'
         # adds general data to product table
-        add = f'''INSERT INTO product VALUES ({laptop.category}, '{laptop._id}', '{laptop.name}', '{laptop.brand}', '{laptop.model}', '{laptop.description}', {laptop.price}, '{laptop.currency}', '{laptop.add_time}');'''
+        add = f'''INSERT INTO product VALUES ({laptop.category}, "{laptop._id}", "{laptop.name}", "{laptop.brand}", "{laptop.model}", "{laptop.description}", {laptop.price}, "{laptop.currency}", "{laptop.add_time}");'''
         cursor.execute(add)
         # add more specific data to laptop table
-        add = f'''INSERT INTO laptop VALUES ('{laptop._id}', '{laptop.processor}', {laptop.ram}, {laptop.display_size}, '{laptop.display_quality}', {laptop.ssd}, {laptop.storage}, {laptop.graphics}, {laptop.vram}); '''
+        add = f'''INSERT INTO laptop VALUES ("{laptop._id}", "{laptop.processor}", {laptop.ram}, {laptop.display_size}, "{laptop.display_quality}", {laptop.ssd}, {laptop.storage}, {laptop.graphics}, {laptop.vram}); '''
         cursor.execute(add)
         connection.commit()
     except sqlite3.Error as er:
@@ -178,10 +178,10 @@ def add_tablet(tablet):
         connection = sqlite3.connect('AllBuy.db')
         cursor = connection.cursor()
         # adds general data to product table
-        add = f'''INSERT INTO product VALUES ({tablet.category}, '{tablet._id}', '{tablet.name}', '{tablet.brand}', '{tablet.model}', '{tablet.description}', {tablet.price}, '{tablet.currency}', '{tablet.add_time}');'''
+        add = f'''INSERT INTO product VALUES ({tablet.category}, "{tablet._id}", "{tablet.name}", "{tablet.brand}", "{tablet.model}", "{tablet.description}", {tablet.price}, "{tablet.currency}", "{tablet.add_time}");'''
         cursor.execute(add)
         # adds more specific data to tablet table
-        add = f'''INSERT INTO tablet VALUES ('{tablet._id}', '{tablet.processor}', {tablet.ram}, {tablet.display_size}, '{tablet.display_quality}', {tablet.network}, {tablet.storage}, {tablet.battery});'''
+        add = f'''INSERT INTO tablet VALUES ("{tablet._id}", "{tablet.processor}", {tablet.ram}, {tablet.display_size}, "{tablet.display_quality}", {tablet.network}, {tablet.storage}, {tablet.battery});'''
         cursor.execute(add)
         connection.commit()
     except sqlite3.Error as er:
@@ -204,10 +204,10 @@ def add_smartphone(smartphone):
         connection = sqlite3.connect('AllBuy.db')
         cursor = connection.cursor()
         # adds general data to product table
-        add = f'''INSERT INTO product VALUES ({smartphone.category}, '{smartphone._id}', '{smartphone.name}', '{smartphone.brand}', '{smartphone.model}', '{smartphone.description}', {smartphone.price}, '{smartphone.currency}', '{smartphone.add_time}');'''
+        add = f'''INSERT INTO product VALUES ({smartphone.category}, "{smartphone._id}", "{smartphone.name}", "{smartphone.brand}", "{smartphone.model}", "{smartphone.description}", {smartphone.price}, "{smartphone.currency}", "{smartphone.add_time}");'''
         cursor.execute(add)
         # adds more general data to smartphone table
-        add = f'''INSERT INTO smartphone VALUES ('{smartphone._id}', '{smartphone.processor}', {smartphone.ram}, {smartphone.display_size}, '{smartphone.display_quality}', {smartphone.double_sim}, {smartphone.storage}, {smartphone.battery}); '''
+        add = f'''INSERT INTO smartphone VALUES ("{smartphone._id}", "{smartphone.processor}", {smartphone.ram}, {smartphone.display_size}, "{smartphone.display_quality}", {smartphone.double_sim}, {smartphone.storage}, {smartphone.battery}); '''
         cursor.execute(add)
         connection.commit()
     except sqlite3.Error as er:
@@ -578,7 +578,7 @@ def add_review(product_id, grade, review):
     try:
         connection = sqlite3.connect('AllBuy.db')
         cursor = connection.cursor()
-        add_review = f'''INSERT INTO review VALUES (\'{product_id}\', \'{grade}\', \'{review}\');'''
+        add_review = f'''INSERT INTO review VALUES ("{product_id}", "{grade}", "{review}");'''
         cursor.execute(add_review)
         connection.commit()
     except sqlite3.Error as e:

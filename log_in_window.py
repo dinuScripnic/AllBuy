@@ -1,6 +1,7 @@
 import PySimpleGUI as sg
 import database_functionality as df
 import register_window as rw
+import user_functionality as uf
 
 
 def log_in_window():
@@ -40,3 +41,26 @@ def log_in_window():
             window.close()
             out = rw.register_window()
             return out
+
+
+def email_confirmation_window():
+    sg.theme("NeutralBlue")
+    layout = [
+        [sg.Text("Credit Card Details", font=("Bookman Old Style", 12))],
+        [sg.Text("NR", font=("Bookman Old Style", 12)), sg.InputText(key="-nr-", size=(30, 1))],
+        [sg.Button("Confirm", font=("Bookman Old Style", 10), size=(7, 1)),],
+    ]
+    window = sg.Window("Payment", layout, element_justification="c")
+    while True:
+        event, values = window.read()
+
+        if event == sg.WIN_CLOSED:
+            break
+
+        elif event == "Confirm":  # verifies the validity of the code, the one send by email
+            if uf.credit_card_validity_check(values["-nr-"]):
+                window.close()
+                return True
+            else:
+                sg.popup_error('Card number not VALID!', title='ERROR', font=('Bahnschrift', 16), line_width=150)
+

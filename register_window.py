@@ -25,7 +25,7 @@ def register_window():
         ],
         [sg.Button("Register", font=("Bookman Old Style", 10), size=(10, 1))],
     ]
-    window = sg.Window("Sign Up", layout, element_justification="c", size=(450, 220))
+    window = sg.Window("Sign Up", layout, element_justification="c", size=(450, 250))
     while True:
         event, values = window.read()
         if event == sg.WIN_CLOSED:

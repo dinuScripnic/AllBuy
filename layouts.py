@@ -23,11 +23,11 @@ layout_for_laptop = [
         [
             sg.Frame('Storage', [
                 [sg.Radio('SSD', "storage", key='-storage_type-', size=(5, 1), font=('Bookman Old Style', 11)), sg.Radio('HDD', "storage", key='-storage_type-', size=(5, 1), font=('Bookman Old Style', 11))],
-                [sg.Text('Size', size=(6, 1), font=('Bookman Old Style', 11)), sg.Combo(lists.laptop_storage_size, enable_events=True, key='-laptop_storage-', size=(5, 1), font=('Bookman Old Style', 11)), sg.Text('GB', size=(5,1), font=('Bookman Old Style', 11))]
+                [sg.Text('Size', size=(6, 1), font=('Bookman Old Style', 11)), sg.Combo(lists.laptop_storage_size, enable_events=True, key='-laptop_storage-', size=(4, 1), font=('Bookman Old Style', 11)), sg.Text('GB', size=(5,1), font=('Bookman Old Style', 11))]
             ], font=('Bookman Old Style', 14), size=(200, 90))
             ,
             sg.Frame('Graphics', [
-                [sg.Radio('Dedicated', "gc", key='graphics', size=(10,1), font=('Bookman Old Style', 11)), sg.Radio('Integrated', "gc", key='graphics', size=(10, 1), font=('Bookman Old Style', 11))],
+                [sg.Radio('Dedicated', "gc", key='graphics', size=(7,1), font=('Bookman Old Style', 11)), sg.Radio('Integrated', "gc", key='graphics', size=(10, 1), font=('Bookman Old Style', 11))],
                 [sg.Text('VRAM', size=(5, 1), font=('Bookman Old Style', 11)), sg.Combo(lists.vram, enable_events=True, key='-vram-', size=(3,1), font=('Bookman Old Style', 11))]
             ], font=('Bookman Old Style', 14), size=(250,90), element_justification='c')
         ],
@@ -40,13 +40,13 @@ layout_for_tablet = [
         [sg.Text('Name', font=('Bookman Old Style', 14)), sg.Input(key='-tablet_name-', font=('Bookman Old Style', 11))],
         [
             sg.Frame('Main Information', [
-                [sg.Text('Brand', size=(14, 1), font=('Bookman Old Style', 11)), sg.Combo(lists.tablet_brands, enable_events=True, key='-tablet_brand-', size=(20,1), font=('Bookman Old Style', 11))],
-                [sg.Text('Model', size=(14, 1), font=('Bookman Old Style', 11)), sg.Input(key='-tablet_model-', size=(21, 1), font=('Bookman Old Style', 11))],
-                [sg.Text('Processor', size=(14, 1), font=('Bookman Old Style', 11)), sg.Combo(lists.smartphone_processor, enable_events=True, key='-tablet_processor-', size=(20, 1), font=('Bookman Old Style', 11))],
+                [sg.Text('Brand', size=(14, 1), font=('Bookman Old Style', 11)), sg.Combo(lists.tablet_brands, enable_events=True, key='-tablet_brand-', size=(18,1), font=('Bookman Old Style', 11))],
+                [sg.Text('Model', size=(14, 1), font=('Bookman Old Style', 11)), sg.Input(key='-tablet_model-', size=(19, 1), font=('Bookman Old Style', 11))],
+                [sg.Text('Processor', size=(14, 1), font=('Bookman Old Style', 11)), sg.Combo(lists.smartphone_processor, enable_events=True, key='-tablet_processor-', size=(18, 1), font=('Bookman Old Style', 11))],
                 [sg.Text('Ram', size=(14, 1), font=('Bookman Old Style', 11)), sg.Combo(lists.smartphone_ram, default_value=4, enable_events=True, key='-tablet_ram-', size=(4, 1), font=('Bookman Old Style', 11)), sg.Text('GB')],
-                [sg.Text('Battery Capacity', size=(14, 1), font=('Bookman Old Style', 11)), sg.Input(key='-tablet_battery-', size=(21, 1), font=('Bookman Old Style', 11)), sg.Text('mAh', size=(10, 1), font=('Bookman Old Style', 11))],
+                [sg.Text('Battery Capacity', size=(14, 1), font=('Bookman Old Style', 11)), sg.Input(key='-tablet_battery-', size=(19, 1), font=('Bookman Old Style', 11)), sg.Text('mAh', size=(10, 1), font=('Bookman Old Style', 11))],
                 [sg.Text('Storage Size', size=(14, 1), font=('Bookman Old Style', 11)), sg.Combo(lists.smartphone_storage, enable_events=True, key='-tablet_storage-', size=(4, 1), font=('Bookman Old Style', 11)), sg.Text('GB', size=(10, 1), font=('Bookman Old Style', 11))]
-                ], font=('Bookman Old Style', 14),  size=(500, 200))
+                ], font=('Bookman Old Style', 14),  size=(500, 210))
         ],
         [
             sg.Frame('Display', [
@@ -64,13 +64,13 @@ layout_for_smartphone = [
         [sg.Text('Name', font=('Bookman Old Style', 14)), sg.Input(key='-phone_name-', font=('Bookman Old Style', 11))],
         [
             sg.Frame('Main Information', [
-                [sg.Text('Brand', size=(14, 1), font=('Bookman Old Style', 11)), sg.Combo(lists.smartphone_brands, enable_events=True, key='-phone_brand-', size=(20,1), font=('Bookman Old Style', 11))],
-                [sg.Text('Model', size=(14, 1), font=('Bookman Old Style', 11)), sg.Input(key='-phone_model-', size=(21, 1), font=('Bookman Old Style', 11))],
-                [sg.Text('Processor', size=(14, 1), font=('Bookman Old Style', 11)), sg.Combo(lists.smartphone_processor, enable_events=True, key='-phone_processor-', size=(20, 1), font=('Bookman Old Style', 11))],
+                [sg.Text('Brand', size=(14, 1), font=('Bookman Old Style', 11)), sg.Combo(lists.smartphone_brands, enable_events=True, key='-phone_brand-', size=(18,1), font=('Bookman Old Style', 11))],
+                [sg.Text('Model', size=(14, 1), font=('Bookman Old Style', 11)), sg.Input(key='-phone_model-', size=(19, 1), font=('Bookman Old Style', 11))],
+                [sg.Text('Processor', size=(14, 1), font=('Bookman Old Style', 11)), sg.Combo(lists.smartphone_processor, enable_events=True, key='-phone_processor-', size=(18, 1), font=('Bookman Old Style', 11))],
                 [sg.Text('Ram', size=(14, 1), font=('Bookman Old Style', 11)), sg.Combo(lists.smartphone_ram, default_value=4, enable_events=True, key='-phone_ram-', size=(4, 1), font=('Bookman Old Style', 11)), sg.Text('GB', size=(10, 1), font=('Bookman Old Style', 11))],
-                [sg.Text('Battery Capacity', size=(14, 1), font=('Bookman Old Style', 11)), sg.Input(key='-phone_battery-', size=(21, 1), font=('Bookman Old Style', 11)), sg.Text('mAh', size=(10, 1), font=('Bookman Old Style', 11))],
+                [sg.Text('Battery Capacity', size=(14, 1), font=('Bookman Old Style', 11)), sg.Input(key='-phone_battery-', size=(19, 1), font=('Bookman Old Style', 11)), sg.Text('mAh', size=(10, 1), font=('Bookman Old Style', 11))],
                 [sg.Text('Storage Size', size=(14, 1), font=('Bookman Old Style', 11)), sg.Combo(lists.smartphone_storage, enable_events=True, key='-phone_storage-', size=(4, 1), font=('Bookman Old Style', 11)), sg.Text('GB')]
-            ], font=('Bookman Old Style', 14),  size=(500, 200))
+            ], font=('Bookman Old Style', 14),  size=(500, 210))
         ],
         [
             sg.Frame('Display', [
