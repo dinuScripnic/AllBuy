@@ -61,7 +61,7 @@ def create_user(name, email, password, repeat_password):
                     # verifies email
                     email_verification(name, email, random_code)
                     # add new import
-                    if rw.email_confirmation_window(random_code):
+                    if rw.email_confirmation_window('register',random_code):
                         # creates an object of class user
                         user = User(name, email, password)
                         # adds to database
@@ -81,9 +81,40 @@ def create_user(name, email, password, repeat_password):
         sg.popup_error('User must have a name!', title='ERROR', font=('Bahnschrift', 16), line_width=150)
 
 
+def change_password(user_id, user_name, user_email, new_password, repeat_password):
+    """
+    :param user_id: user_id
+    :param user_name: user name
+    :param user_email: user email
+    :param new_password: new password
+    :param repeat_password: repeat password
+    :return: changes password of user
+    """
+    if len(new_password) in range(8, 17):  # check if password is long enough
+        if new_password == repeat_password:  # check if passwords match
+            # generates the verification code
+            random_code = ''.join([str(random.randint(0, 9)) for i in range(6)])
+            # verifies email
+            email_verification(user_name, user_email, random_code)
+            # add new import
+            try:
+                if rw.email_confirmation_window('change_password',random_code):
+                    # changes password
+                    df.change_password(user_id, new_password)
+                    return True
+            except Exception as error:
+                print(error)
+            else:
+                sg.popup_error('Wrong code!', title='ERROR', font=('Bahnschrift', 16), line_width=150)
+        else:
+            sg.popup_error('Passwords do not match!', title='ERROR', font=('Bahnschrift', 16), line_width=150)
+    else:
+        sg.popup_error('Password to short or to long!\nShould be from 8 to 16 characters',
+                       title='ERROR', font=('Bahnschrift', 16), line_width=150)
+
+
 def email_finish(name, email, products, price, currency):
     """
-
     :param name: user_name
     :param email: user_email
     :param products: name of products you have bought

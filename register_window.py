@@ -1,5 +1,6 @@
 import PySimpleGUI as sg
 import user_functionality as ur
+import change_password_window as cpw
 
 
 def register_window():
@@ -17,11 +18,11 @@ def register_window():
         ],
         [
             sg.Text("Password", size=(15, 1), font=("Bookman Old Style", 11)),
-            sg.InputText(key="-password-"),
+            sg.InputText(key="-password-", password_char='*'),
         ],
         [
             sg.Text("Confirm Password", size=(15, 1), font=("Bookman Old Style", 11)),
-            sg.InputText(key="-repeat_password-"),
+            sg.InputText(key="-repeat_password-",  password_char='*'),
         ],
         [sg.Button("Register", font=("Bookman Old Style", 10), size=(10, 1))],
     ]
@@ -42,7 +43,7 @@ def register_window():
                 return out
 
 
-def email_confirmation_window(generated_code):
+def email_confirmation_window(status,generated_code):
     sg.theme("NeutralBlue")
     layout = [
         [sg.Text("Confirmation code", font=("Bookman Old Style", 12))],
@@ -67,5 +68,10 @@ def email_confirmation_window(generated_code):
                 return False
 
         elif event == "Return":
-            window.close()
-            register_window()
+            if status == "register":
+                window.close()
+                register_window()
+            elif status == "change_password":
+                window.close()
+                cpw.change_password()
+

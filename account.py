@@ -86,15 +86,31 @@ class Ui_Form(object):
         self.user_date.setFont(font)
         self.user_date.setAlignment(QtCore.Qt.AlignCenter)
         self.user_date.setObjectName("user_date")
+        # quit button
+        self.quit_button = QtWidgets.QPushButton(Form)
+        self.quit_button.setGeometry(QtCore.QRect(280, 320, 100, 30))
+        self.quit_button.setObjectName("quit")
+        self.quit_button.setText("Quit")
+        self.quit_button.setFont(font)
+        self.quit_button.setStyleSheet("background-color: rgb(208, 219, 189);")
+
+        # change password button
+        self.change_password_button = QtWidgets.QPushButton(Form)
+        self.change_password_button.setGeometry(QtCore.QRect(400, 320, 150, 30))
+        self.change_password_button.setObjectName("change_password")
+        self.change_password_button.setText("Change Password")
+        self.change_password_button.setFont(font)
+        self.change_password_button.setStyleSheet("background-color: rgb(208, 219, 189);")
 
         # displays user image
+        # if user has no image it will display default image
         self.pixmap = QPixmap('photos/user.jpg')
+        # add if-statement if user has picture
         self.label.setPixmap(self.pixmap)
         self.label.setScaledContents(True)
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
-
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate

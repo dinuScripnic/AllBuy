@@ -140,6 +140,26 @@ def get_user(email, password):  # get user out of a database, needed for logging
             connection.close()
 
 
+def change_password(user_id, new_password):
+    """
+
+        :param user: user class object
+        :param new_password: new password
+    """
+    try:
+        connection = sqlite3.connect('AllBuy.db')
+        cursor = connection.cursor()
+        cursor.execute(f'UPDATE costumers SET costumer_password = \'{new_password}\' WHERE costumer_id = \'{user_id}\'')
+        connection.commit()
+        sg.popup("Password changed")
+    except sqlite3.Error as er:
+        print(f'Error: {er}')
+    finally:
+        if connection:
+            cursor.close()
+            connection.close()
+
+
 def add_laptop(laptop):
     """
 
@@ -454,7 +474,7 @@ def filter_smartphone(parameters):
                 filter += f"smartphone.display_size <= 5 AND "
             if parameters['screen_size'] == '5`-6`':
                 filter += f"smartphone.display_size >5 AND smartphone.display_size <6 AND "
-            if parameters['screen_size'] == '>7`':
+            if parameters['screen_size'] == '>6`':
                 filter += f"smartphone.display_size >= 6 AND "
         if 'screen_quality' in keys:
             if parameters['screen_quality'] == 'Standard':

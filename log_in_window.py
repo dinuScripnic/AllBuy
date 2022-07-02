@@ -14,7 +14,7 @@ def log_in_window():
         ],
         [
             sg.Text("Password", size=(10, 1), font=("Bookman Old Style", 11)),
-            sg.InputText(key="-password-", size=(25, 1)),
+            sg.InputText(key="-password-", size=(25, 1),  password_char='*'),
         ],
         [
             sg.Button("Log in", font=("Bookman Old Style", 10), size=(10, 1)),
