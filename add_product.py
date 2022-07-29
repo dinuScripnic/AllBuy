@@ -20,7 +20,7 @@ def add_product_window():
          sg.Column(layouts.layout_for_smartphone, key='Smartphone', visible=False, element_justification='c')]
     ]
 
-    window = sg.Window('Add product', layout, size=(500, 700), element_justification='c')
+    window = sg.Window('Add product', layout, size=(500, 720), element_justification='c')
     layout = 'Laptop'
     while True:
         event, values = window.read()
@@ -38,18 +38,18 @@ def add_product_window():
 
         elif event == 'Add Laptop':
             # assigns all values
-            name, brand, model, processor, ram, display_size, display_quality, ssd, storage, graphics, description, price, currency = values['-laptop_name-'], values['-laptop_brand-'], values['-laptop_model-'], values['-laptop_processor-'], values['-laptop_ram-'], values['-laptop_size-'], values['-laptop_quality-'], values['-storage_type-'], values['-laptop_storage-'], values['graphics'], values['-laptop_description-'], values['-laptop_price-'], values['-laptop_currency-']
+            name, brand, model, processor, ram, display_size, display_quality, ssd, storage, graphics, description, image, price, currency = values['-laptop_name-'], values['-laptop_brand-'], values['-laptop_model-'], values['-laptop_processor-'], values['-laptop_ram-'], values['-laptop_size-'], values['-laptop_quality-'], values['-storage_type-'], values['-laptop_storage-'], values['graphics'], values['-laptop_description-'], values['-laptop_image-'], values['-laptop_price-'], values['-laptop_currency-']
             # validates the input
             if adding_validation.validation(category, brand, processor, ram, storage, display_size, display_quality, price, currency):  # assigns all to database
                 vram = None
                 if graphics:
                     vram = values['-vram-']
                     # creates the product of class laptop
-                    product = Laptop(name, brand, model, processor, ram, display_size, display_quality, ssd, storage, graphics, vram, description, price, currency)
+                    product = Laptop(name, brand, model, processor, ram, display_size, display_quality, ssd, storage, graphics, vram, description, image, price, currency)
                     if vram not in lists.vram:
                         sg.PopupError('Invalid value for VRAM')
                 else:
-                    product = Laptop(name, brand, model, processor, ram, display_size, display_quality, ssd, storage, graphics, vram, description, price, currency)
+                    product = Laptop(name, brand, model, processor, ram, display_size, display_quality, ssd, storage, graphics, vram, description, image, price, currency)
                 # assigns product to database
                 df.add_laptop(product)
                 sg.PopupOK('Successfully Posted')
@@ -57,10 +57,10 @@ def add_product_window():
 
         elif event == 'Add Tablet':
             # assign values
-            name, brand, model, processor, ram, battery, storage, display_size, display_quality, network, description, price, currency = values['-tablet_name-'], values['-tablet_brand-'], values['-tablet_model-'], values['-tablet_processor-'], values['-tablet_ram-'], values['-tablet_battery-'], values['-tablet_storage-'], values['-tablet_size-'], values['-tablet_quality-'], values['net'], values['-tablet_description-'], values['-tablet_price-'], values['-tablet_currency-']
+            name, brand, model, processor, ram, battery, storage, display_size, display_quality, network, description, image, price, currency = values['-tablet_name-'], values['-tablet_brand-'], values['-tablet_model-'], values['-tablet_processor-'], values['-tablet_ram-'], values['-tablet_battery-'], values['-tablet_storage-'], values['-tablet_size-'], values['-tablet_quality-'], values['net'], values['-tablet_description-'], values['-tablet_image-'], values['-tablet_price-'], values['-tablet_currency-']
             # checks values
             if adding_validation.validation(category, brand, processor, ram, storage, display_size, display_quality, price, currency, battery):
-                product = Tablet(name, brand, model, processor, ram, battery, storage,  display_size, display_quality, network, description, price, currency)
+                product = Tablet(name, brand, model, processor, ram, battery, storage,  display_size, display_quality, network, description, image, price, currency)
                 # inserts in database
                 df.add_tablet(product)
                 sg.PopupOK('Successfully Posted')
@@ -68,11 +68,11 @@ def add_product_window():
 
         elif event == 'Add Smartphone':
             # assign values
-            name, brand, model, processor, ram, battery, storage, connector, display_size, display_quality, double_sim, description, price, currency = values['-phone_name-'], values['-phone_brand-'], values['-phone_model-'], values['-phone_processor-'], values['-phone_ram-'], values['-phone_battery-'], values['-phone_storage-'], values['-phone_storage-'], values['-phone_size-'], values['-phone_quality-'], values['sim'], values['-phone_description-'], values['-phone_price-'], values['-phone_currency-']
+            name, brand, model, processor, ram, battery, storage, connector, display_size, display_quality, double_sim, description, image, price, currency = values['-phone_name-'], values['-phone_brand-'], values['-phone_model-'], values['-phone_processor-'], values['-phone_ram-'], values['-phone_battery-'], values['-phone_storage-'], values['-phone_storage-'], values['-phone_size-'], values['-phone_quality-'], values['sim'], values['-phone_description-'], values['-phone_image-'], values['-phone_price-'], values['-phone_currency-']
             # check values
             if adding_validation.validation(category, brand, processor, ram, storage, display_size, display_quality, price, currency, battery):
                 # inserts in database
-                product = Smartphone(name, brand, model, processor, ram, battery, storage, display_size, display_quality, double_sim, description, price, currency)
+                product = Smartphone(name, brand, model, processor, ram, battery, storage, display_size, display_quality, double_sim, description, image, price, currency)
                 df.add_smartphone(product)
                 sg.PopupOK('Successfully Posted')
                 window.close()

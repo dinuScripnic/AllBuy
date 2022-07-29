@@ -5,7 +5,7 @@ import uuid
 class Laptop:
 
     def __init__(self, name, brand, model, processor, ram, display_size, display_quality, ssd, storage, graphics, vram,
-                 description, price, currency, _id=uuid.uuid1(), add_time=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), category=1):
+                 description, image, price, currency, _id=uuid.uuid1(), add_time=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), category=1):
         self.category = category
         self._id = _id
         self.name = name
@@ -20,6 +20,7 @@ class Laptop:
         self.graphics = graphics
         self.vram = vram
         self.description = description
+        self.image = image
         self.price = price
         self.currency = currency
         self.add_time = add_time
@@ -28,7 +29,7 @@ class Laptop:
 class Tablet:
 
     def __init__(self, name, brand, model, processor, ram, battery, storage,  display_size, display_quality, network,
-                 description, price, currency, _id=uuid.uuid1(), add_time=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), category=2):
+                 description, image, price, currency, _id=uuid.uuid1(), add_time=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), category=2):
         self.category = category
         self._id = _id
         self.name = name
@@ -42,6 +43,7 @@ class Tablet:
         self.display_quality = display_quality
         self.network = network
         self.description = description
+        self.image = image
         self.price = price
         self.currency = currency
         self.add_time = add_time
@@ -50,7 +52,7 @@ class Tablet:
 class Smartphone:
 
     def __init__(self, name, brand, model, processor, ram, battery, storage,  display_size, display_quality, double_sim,
-                 description, price, currency, _id=uuid.uuid1(), add_time=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), category=3):
+                 description, image, price, currency, _id=uuid.uuid1(), add_time=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), category=3):
         self.category = category
         self._id = _id
         self.name = name
@@ -64,6 +66,7 @@ class Smartphone:
         self.display_quality = display_quality
         self.double_sim = double_sim
         self.description = description
+        self.image = image
         self.price = price
         self.currency = currency
         self.add_time = add_time

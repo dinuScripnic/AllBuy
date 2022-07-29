@@ -41,7 +41,8 @@ def check_db():  # creates the dummy database if it doesn't exist
                               storage_size INTEGER,
                               graphics BOOLEAN,
                               vram INTEGER,
-                             FOREIGN KEY (id) REFERENCES product(id) on DELETE CASCADE on UPDATE CASCADE);'''
+                              image VARCHAR(255));
+                              FOREIGN KEY (id) REFERENCES product(id) on DELETE CASCADE on UPDATE CASCADE);'''
         cursor.execute(create_workspace)
         connection.commit()
         create_workspace = '''CREATE TABLE tablet(
@@ -53,6 +54,7 @@ def check_db():  # creates the dummy database if it doesn't exist
                                   network BOOLEAN,
                                   storage_size INTEGER,
                                   battery INTEGER,
+                                  image VARCHAR(255))
                                   FOREIGN KEY (id) REFERENCES product(id) on DELETE CASCADE on UPDATE CASCADE
                               );'''
         cursor.execute(create_workspace)
@@ -66,6 +68,7 @@ def check_db():  # creates the dummy database if it doesn't exist
                               dual_sim BOOLEAN,
                               storage_size INTEGER,
                               battery INTEGER,
+                              image VARCHAR(255))
                               FOREIGN KEY (id) REFERENCES product(id) on DELETE CASCADE on UPDATE CASCADE);'''
         cursor.execute(create_workspace)
         connection.commit()
@@ -176,7 +179,7 @@ def add_laptop(laptop):
         add = f'''INSERT INTO product VALUES ({laptop.category}, "{laptop._id}", "{laptop.name}", "{laptop.brand}", "{laptop.model}", "{laptop.description}", {laptop.price}, "{laptop.currency}", "{laptop.add_time}");'''
         cursor.execute(add)
         # add more specific data to laptop table
-        add = f'''INSERT INTO laptop VALUES ("{laptop._id}", "{laptop.processor}", {laptop.ram}, {laptop.display_size}, "{laptop.display_quality}", {laptop.ssd}, {laptop.storage}, {laptop.graphics}, {laptop.vram}); '''
+        add = f'''INSERT INTO laptop VALUES ("{laptop._id}", "{laptop.processor}", {laptop.ram}, {laptop.display_size}, "{laptop.display_quality}", {laptop.ssd}, {laptop.storage}, {laptop.graphics}, {laptop.vram}, "{laptop.image}"); '''
         cursor.execute(add)
         connection.commit()
     except sqlite3.Error as er:
@@ -201,7 +204,7 @@ def add_tablet(tablet):
         add = f'''INSERT INTO product VALUES ({tablet.category}, "{tablet._id}", "{tablet.name}", "{tablet.brand}", "{tablet.model}", "{tablet.description}", {tablet.price}, "{tablet.currency}", "{tablet.add_time}");'''
         cursor.execute(add)
         # adds more specific data to tablet table
-        add = f'''INSERT INTO tablet VALUES ("{tablet._id}", "{tablet.processor}", {tablet.ram}, {tablet.display_size}, "{tablet.display_quality}", {tablet.network}, {tablet.storage}, {tablet.battery});'''
+        add = f'''INSERT INTO tablet VALUES ("{tablet._id}", "{tablet.processor}", {tablet.ram}, {tablet.display_size}, "{tablet.display_quality}", {tablet.network}, {tablet.storage}, {tablet.battery}, "{tablet.image}");'''
         cursor.execute(add)
         connection.commit()
     except sqlite3.Error as er:
@@ -227,7 +230,7 @@ def add_smartphone(smartphone):
         add = f'''INSERT INTO product VALUES ({smartphone.category}, "{smartphone._id}", "{smartphone.name}", "{smartphone.brand}", "{smartphone.model}", "{smartphone.description}", {smartphone.price}, "{smartphone.currency}", "{smartphone.add_time}");'''
         cursor.execute(add)
         # adds more general data to smartphone table
-        add = f'''INSERT INTO smartphone VALUES ("{smartphone._id}", "{smartphone.processor}", {smartphone.ram}, {smartphone.display_size}, "{smartphone.display_quality}", {smartphone.double_sim}, {smartphone.storage}, {smartphone.battery}); '''
+        add = f'''INSERT INTO smartphone VALUES ("{smartphone._id}", "{smartphone.processor}", {smartphone.ram}, {smartphone.display_size}, "{smartphone.display_quality}", {smartphone.double_sim}, {smartphone.storage}, {smartphone.battery}, "{smartphone.image}"); '''
         cursor.execute(add)
         connection.commit()
     except sqlite3.Error as er:
@@ -249,7 +252,7 @@ def get_all_products():
         connection = sqlite3.connect('AllBuy.db')
         output = []
         cursor = connection.cursor()
-        cursor.execute(f'''SELECT product.category, product.id, product.name, product.brand, product.model, laptop.processor, laptop.ram, laptop.display_size, laptop.display_quality, laptop.ssd, laptop.storage_size, laptop.graphics, laptop.vram, product.description, product.price, product.currency, product.add_time
+        cursor.execute(f'''SELECT product.category, product.id, product.name, product.brand, product.model, laptop.processor, laptop.ram, laptop.display_size, laptop.display_quality, laptop.ssd, laptop.storage_size, laptop.graphics, laptop.vram, product.description, product.price, product.currency, product.add_time, laptop.image
                            FROM product JOIN laptop ON product.id = laptop.id''')
         product_data = cursor.fetchall()  # searches for all laptops
         for object in product_data:
@@ -257,19 +260,19 @@ def get_all_products():
             output.append(Laptop(category=object[0], _id=object[1], name=object[2], brand=object[3], model=object[4],
                               processor=object[5], ram=object[6], display_size=object[7], display_quality=object[8],
                               ssd=object[9], storage=object[10], graphics=object[11], vram=object[12],
-                              description=object[13], price=object[14], currency=object[15], add_time=object[16]))
-        cursor.execute(f'''SELECT product.category, product.id, product.name, product.brand, product.model, tablet.processor, tablet.ram, tablet.battery, tablet.display_size, tablet.display_quality, tablet.network, tablet.storage_size, product.description, product.price, product.currency, product.add_time
+                              description=object[13], price=object[14], currency=object[15], add_time=object[16], image=object[17]))
+        cursor.execute(f'''SELECT product.category, product.id, product.name, product.brand, product.model, tablet.processor, tablet.ram, tablet.battery, tablet.display_size, tablet.display_quality, tablet.network, tablet.storage_size, product.description, product.price, product.currency, product.add_time, tablet.image
                            FROM product JOIN tablet ON product.id = tablet.id''')
         product_data = cursor.fetchall()  # searches for tablets
         for object in product_data:
             # creates products of certain class and assigns to output
-            output.append(Tablet(category=object[0], _id=object[1], name=object[2], brand=object[3], model=object[4], processor=object[5], ram=object[6], battery=object[7], display_size=object[8], display_quality=object[9], network=object[10], storage=object[11], description=object[12],price=object[13], currency=object[14], add_time=object[15]))
-        cursor.execute(f'''SELECT product.category, product.id, product.name, product.brand, product.model, smartphone.processor, smartphone.ram, smartphone.display_size, smartphone.display_quality, smartphone.dual_sim, smartphone.storage_size, smartphone.battery, product.description, product.price, product.currency, product.add_time
+            output.append(Tablet(category=object[0], _id=object[1], name=object[2], brand=object[3], model=object[4], processor=object[5], ram=object[6], battery=object[7], display_size=object[8], display_quality=object[9], network=object[10], storage=object[11], description=object[12],price=object[13], currency=object[14], add_time=object[15], image=object[16]))
+        cursor.execute(f'''SELECT product.category, product.id, product.name, product.brand, product.model, smartphone.processor, smartphone.ram, smartphone.display_size, smartphone.display_quality, smartphone.dual_sim, smartphone.storage_size, smartphone.battery, product.description, product.price, product.currency, product.add_time, smartphone.image
                            FROM product JOIN smartphone ON product.id = smartphone.id''')
         product_data = cursor.fetchall()  # searches for smartphones
         for object in product_data:
             # creates products of certain class and assigns to output
-            output.append(Smartphone(category=object[0], _id=object[1], name=object[2], brand=object[3], model=object[4], processor=object[5], ram=object[6], battery=object[11], display_size=object[7], display_quality=object[8], storage=object[10], double_sim=object[9], description=object[12], price=object[13], currency=object[14], add_time=object[15]))
+            output.append(Smartphone(category=object[0], _id=object[1], name=object[2], brand=object[3], model=object[4], processor=object[5], ram=object[6], battery=object[11], display_size=object[7], display_quality=object[8], storage=object[10], double_sim=object[9], description=object[12], price=object[13], currency=object[14], add_time=object[15], image=object[16]))
         random.shuffle(output)  # shuffles se we don't always have laptop first
         return output
     except sqlite3.Error as er:
@@ -295,7 +298,7 @@ def search_product(searched_name):
         out = []
         for data in product_data:
             if data[0] == 1:
-                command = f'''SELECT product.category, product.id, product.name, product.brand, product.model, laptop.processor, laptop.ram, laptop.display_size, laptop.display_quality, laptop.ssd, laptop.storage_size, laptop.graphics, laptop.vram, product.description, product.price, product.currency, product.add_time 
+                command = f'''SELECT product.category, product.id, product.name, product.brand, product.model, laptop.processor, laptop.ram, laptop.display_size, laptop.display_quality, laptop.ssd, laptop.storage_size, laptop.graphics, laptop.vram, product.description, product.price, product.currency, product.add_time, laptop.image
                               FROM product JOIN laptop ON product.id = laptop.id WHERE product.id = '{data[1]}' '''
                 cursor.execute(command)
                 object = cursor.fetchall()[0]
@@ -303,9 +306,9 @@ def search_product(searched_name):
                 out.append(Laptop(category=object[0], _id=object[1], name=object[2], brand=object[3], model=object[4],
                                   processor=object[5], ram=object[6], display_size=object[7], display_quality=object[8],
                                   ssd=object[9], storage=object[10], graphics=object[11], vram=object[12],
-                                  description=object[13], price=object[14], currency=object[15], add_time=object[16]))
+                                  description=object[13], price=object[14], currency=object[15], add_time=object[16], image=object[17]))
             elif data[0] == 2:
-                cursor.execute(f'''SELECT product.category, product.id, product.name, product.brand, product.model, tablet.processor, tablet.ram, tablet.battery, tablet.display_size, tablet.display_quality, tablet.network, tablet.storage_size, product.description, product.price, product.currency, product.add_time
+                cursor.execute(f'''SELECT product.category, product.id, product.name, product.brand, product.model, tablet.processor, tablet.ram, tablet.battery, tablet.display_size, tablet.display_quality, tablet.network, tablet.storage_size, product.description, product.price, product.currency, product.add_time, tablet.image
                                    FROM product JOIN tablet ON product.id = tablet.id  WHERE product.id = '{data[1]}' ''')
                 object = cursor.fetchall()[0]
                 # creates products of certain class and assigns to output
@@ -313,10 +316,10 @@ def search_product(searched_name):
                     Tablet(category=object[0], _id=object[1], name=object[2], brand=object[3], model=object[4],
                            processor=object[5], ram=object[6], battery=object[7], display_size=object[8],
                            display_quality=object[9], network=object[10], storage=object[11], description=object[12],
-                           price=object[13], currency=object[14], add_time=object[15]))
+                           price=object[13], currency=object[14], add_time=object[15], image=object[16]))
 
             elif data[0] == 3:
-                cursor.execute(f'''SELECT product.category, product.id, product.name, product.brand, product.model, smartphone.processor, smartphone.ram, smartphone.display_size, smartphone.display_quality, smartphone.dual_sim, smartphone.storage_size, smartphone.battery, product.description, product.price, product.currency, product.add_time
+                cursor.execute(f'''SELECT product.category, product.id, product.name, product.brand, product.model, smartphone.processor, smartphone.ram, smartphone.display_size, smartphone.display_quality, smartphone.dual_sim, smartphone.storage_size, smartphone.battery, product.description, product.price, product.currency, product.add_time, smartphone.image
                                    FROM product JOIN smartphone ON product.id = smartphone.id  WHERE product.id = '{data[1]}' ''')
                 object = cursor.fetchall()[0]
                 # creates products of certain class and assigns to output
@@ -324,7 +327,7 @@ def search_product(searched_name):
                     Smartphone(category=object[0], _id=object[1], name=object[2], brand=object[3], model=object[4],
                                processor=object[5], ram=object[6], battery=object[11], display_size=object[7],
                                display_quality=object[8], storage=object[10], double_sim=object[9],
-                               description=object[12], price=object[13], currency=object[14], add_time=object[15]))
+                               description=object[12], price=object[13], currency=object[14], add_time=object[15], image=object[16]))
         return out
     except sqlite3.Error as er:
         print(f'Error: {er}')
@@ -346,7 +349,7 @@ def filter_laptop(parameters):
         out = []
         connection = sqlite3.connect('AllBuy.db')
         cursor = connection.cursor()
-        filter = f'''SELECT product.category, product.id, product.name, product.brand, product.model, laptop.processor, laptop.ram, laptop.display_size, laptop.display_quality, laptop.ssd, laptop.storage_size, laptop.graphics, laptop.vram, product.description, product.price, product.currency, product.add_time 
+        filter = f'''SELECT product.category, product.id, product.name, product.brand, product.model, laptop.processor, laptop.ram, laptop.display_size, laptop.display_quality, laptop.ssd, laptop.storage_size, laptop.graphics, laptop.vram, product.description, product.price, product.currency, product.add_time, laptop.image
                      FROM product JOIN laptop ON product.id = laptop.id 
                      WHERE laptop.ram = {parameters['ram']} AND '''
         # generates the sql call for filter function
@@ -383,7 +386,7 @@ def filter_laptop(parameters):
         objects = cursor.fetchall()
         for object in objects:
             # appends to output laptop
-            out.append(Laptop(category=object[0], _id=object[1], name=object[2], brand=object[3], model=object[4], processor=object[5], ram=object[6], display_size=object[7], display_quality=object[8], ssd=object[9], storage=object[10], graphics=object[11], vram=object[12], description=object[13], price=object[14], currency=object[15], add_time=object[16]))
+            out.append(Laptop(category=object[0], _id=object[1], name=object[2], brand=object[3], model=object[4], processor=object[5], ram=object[6], display_size=object[7], display_quality=object[8], ssd=object[9], storage=object[10], graphics=object[11], vram=object[12], description=object[13], price=object[14], currency=object[15], add_time=object[16], image=object[17]))
         return out
     except sqlite3.Error as er:
         print(f'Error: {er}')
@@ -405,7 +408,7 @@ def filter_tablet(parameters):
         output = []
         connection = sqlite3.connect('AllBuy.db')
         cursor = connection.cursor()
-        filter = f'''SELECT product.category, product.id, product.name, product.brand, product.model, tablet.processor, tablet.ram, tablet.battery, tablet.display_size, tablet.display_quality, tablet.network, tablet.storage_size, product.description, product.price, product.currency, product.add_time
+        filter = f'''SELECT product.category, product.id, product.name, product.brand, product.model, tablet.processor, tablet.ram, tablet.battery, tablet.display_size, tablet.display_quality, tablet.network, tablet.storage_size, product.description, product.price, product.currency, product.add_time, tablet.image
                      FROM product JOIN tablet ON product.id = tablet.id  WHERE tablet.ram = {parameters['ram']} AND  product.brand = '{parameters['brand']}' AND '''
         # generates the sql call for filter function
         if 'processor' in keys:
@@ -435,7 +438,7 @@ def filter_tablet(parameters):
         objects = cursor.fetchall()
         for object in objects:
             # appends to output tablets
-            output.append(Tablet(category=object[0], _id=object[1], name=object[2], brand=object[3], model=object[4], processor=object[5], ram=object[6], battery=object[7], display_size=object[8], display_quality=object[9], network=object[10], storage=object[11], description=object[12],price=object[13], currency=object[14], add_time=object[15]))
+            output.append(Tablet(category=object[0], _id=object[1], name=object[2], brand=object[3], model=object[4], processor=object[5], ram=object[6], battery=object[7], display_size=object[8], display_quality=object[9], network=object[10], storage=object[11], description=object[12],price=object[13], currency=object[14], add_time=object[15], image=object[16]))
         return output
     except sqlite3.Error as er:
         print(f'Error: {er}')
@@ -457,7 +460,7 @@ def filter_smartphone(parameters):
         output=[]
         connection = sqlite3.connect('AllBuy.db')
         cursor = connection.cursor()
-        filter = f'''SELECT product.category, product.id, product.name, product.brand, product.model, smartphone.processor, smartphone.ram, smartphone.display_size, smartphone.display_quality, smartphone.dual_sim, smartphone.storage_size, smartphone.battery, product.description, product.price, product.currency, product.add_time
+        filter = f'''SELECT product.category, product.id, product.name, product.brand, product.model, smartphone.processor, smartphone.ram, smartphone.display_size, smartphone.display_quality, smartphone.dual_sim, smartphone.storage_size, smartphone.battery, product.description, product.price, product.currency, product.add_time, smartphone.image
                      FROM product JOIN smartphone ON product.id = smartphone.id  WHERE smartphone.ram = {parameters['ram']} AND  product.brand = '{parameters['brand']}' AND '''
         # generates the sql call for filter function
         if 'processor' in keys:
@@ -487,7 +490,7 @@ def filter_smartphone(parameters):
         objects = cursor.fetchall()
         for object in objects:
             # appends to output smartphones
-            output.append(Smartphone(category=object[0], _id=object[1], name=object[2], brand=object[3], model=object[4], processor=object[5], ram=object[6], battery=object[11], display_size=object[7], display_quality=object[8], storage=object[10], double_sim=object[9], description=object[12], price=object[13], currency=object[14], add_time=object[15]))
+            output.append(Smartphone(category=object[0], _id=object[1], name=object[2], brand=object[3], model=object[4], processor=object[5], ram=object[6], battery=object[11], display_size=object[7], display_quality=object[8], storage=object[10], double_sim=object[9], description=object[12], price=object[13], currency=object[14], add_time=object[15], image=object[16]))
         return output
     except sqlite3.Error as er:
         print(f'Error: {er}')
@@ -512,33 +515,38 @@ def basket(user_id):
         out = []
         for data in basket:
             if data[0] == 1:
-                command = f'''SELECT product.category, product.id, product.name, product.brand, product.model, laptop.processor, laptop.ram, laptop.display_size, laptop.display_quality, laptop.ssd, laptop.storage_size, laptop.graphics, laptop.vram, product.description, product.price, product.currency, product.add_time 
-                              FROM product JOIN laptop ON product.id = laptop.id WHERE product.id = '{data[1]}' '''
+                command = f'''SELECT product.category, product.id, product.name, product.brand, product.model, laptop.processor, laptop.ram, laptop.display_size, laptop.display_quality, laptop.ssd, laptop.storage_size, laptop.graphics, laptop.vram, product.description, product.price, product.currency, product.add_time, laptop.image
+                                  FROM product JOIN laptop ON product.id = laptop.id WHERE product.id = '{data[1]}' '''
                 cursor.execute(command)
                 object = cursor.fetchall()[0]
+                # creates products of certain class and assigns to output
                 out.append(Laptop(category=object[0], _id=object[1], name=object[2], brand=object[3], model=object[4],
                                   processor=object[5], ram=object[6], display_size=object[7], display_quality=object[8],
                                   ssd=object[9], storage=object[10], graphics=object[11], vram=object[12],
-                                  description=object[13], price=object[14], currency=object[15], add_time=object[16]))
+                                  description=object[13], price=object[14], currency=object[15], add_time=object[16],
+                                  image=object[17]))
             elif data[0] == 2:
-                cursor.execute(f'''SELECT product.category, product.id, product.name, product.brand, product.model, tablet.processor, tablet.ram, tablet.battery, tablet.display_size, tablet.display_quality, tablet.network, tablet.storage_size, product.description, product.price, product.currency, product.add_time
-                                   FROM product JOIN tablet ON product.id = tablet.id  WHERE product.id = '{data[1]}' ''')
+                cursor.execute(f'''SELECT product.category, product.id, product.name, product.brand, product.model, tablet.processor, tablet.ram, tablet.battery, tablet.display_size, tablet.display_quality, tablet.network, tablet.storage_size, product.description, product.price, product.currency, product.add_time, tablet.image
+                                       FROM product JOIN tablet ON product.id = tablet.id  WHERE product.id = '{data[1]}' ''')
                 object = cursor.fetchall()[0]
+                # creates products of certain class and assigns to output
                 out.append(
                     Tablet(category=object[0], _id=object[1], name=object[2], brand=object[3], model=object[4],
                            processor=object[5], ram=object[6], battery=object[7], display_size=object[8],
                            display_quality=object[9], network=object[10], storage=object[11], description=object[12],
-                           price=object[13], currency=object[14], add_time=object[15]))
+                           price=object[13], currency=object[14], add_time=object[15], image=object[16]))
 
             elif data[0] == 3:
-                cursor.execute(f'''SELECT product.category, product.id, product.name, product.brand, product.model, smartphone.processor, smartphone.ram, smartphone.display_size, smartphone.display_quality, smartphone.dual_sim, smartphone.storage_size, smartphone.battery, product.description, product.price, product.currency, product.add_time
-                                   FROM product JOIN smartphone ON product.id = smartphone.id  WHERE product.id = '{data[1]}' ''')
+                cursor.execute(f'''SELECT product.category, product.id, product.name, product.brand, product.model, smartphone.processor, smartphone.ram, smartphone.display_size, smartphone.display_quality, smartphone.dual_sim, smartphone.storage_size, smartphone.battery, product.description, product.price, product.currency, product.add_time, smartphone.image
+                                       FROM product JOIN smartphone ON product.id = smartphone.id  WHERE product.id = '{data[1]}' ''')
                 object = cursor.fetchall()[0]
+                # creates products of certain class and assigns to output
                 out.append(
                     Smartphone(category=object[0], _id=object[1], name=object[2], brand=object[3], model=object[4],
                                processor=object[5], ram=object[6], battery=object[11], display_size=object[7],
                                display_quality=object[8], storage=object[10], double_sim=object[9],
-                               description=object[12], price=object[13], currency=object[14], add_time=object[15]))
+                               description=object[12], price=object[13], currency=object[14], add_time=object[15],
+                               image=object[16]))
         return out
     except sqlite3.Error as er:
         print(f'Error: {er}')
